@@ -4,14 +4,16 @@ using DogsIRL_API.Data;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 
 namespace DogsIRL_API.Migrations
 {
     [DbContext(typeof(ApplicationDbContext))]
-    partial class ApplicationDbContextModelSnapshot : ModelSnapshot
+    [Migration("20200518215436_initial")]
+    partial class initial
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -80,8 +82,8 @@ namespace DogsIRL_API.Migrations
                             Appetite = (short)8,
                             Birthday = new DateTime(2018, 7, 10, 0, 0, 0, 0, DateTimeKind.Unspecified),
                             Bravery = (short)9,
-                            DateCollected = new DateTime(2020, 5, 18, 16, 7, 11, 610, DateTimeKind.Local).AddTicks(2620),
-                            DateCreated = new DateTime(2020, 5, 18, 16, 7, 11, 595, DateTimeKind.Local).AddTicks(7780),
+                            DateCollected = new DateTime(2020, 5, 18, 14, 54, 35, 993, DateTimeKind.Local).AddTicks(8350),
+                            DateCreated = new DateTime(2020, 5, 18, 14, 54, 35, 978, DateTimeKind.Local).AddTicks(6240),
                             Energy = (short)8,
                             Floofiness = (short)1,
                             GoodDog = (short)8,

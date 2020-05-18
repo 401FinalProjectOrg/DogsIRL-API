@@ -16,24 +16,26 @@ namespace DogsIRL_API.Data
 
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {
-            new PetCard
-            {
-                ID = 1,
-                Name = "Tucker",
-                ImageURL = "",
-                Sex = "Male",
-                Owner = "andrewbc",
-                AgeYears = 2,
-                Birthday = DateTime.Parse("07/10/2018"),
-                DateCreated = DateTime.Now,
-                DateCollected = DateTime.Now,
-                GoodDog = 8,
-                Floofiness = 1,
-                Energy = 8,
-                Snuggles = 8,
-                Appetite = 8,
-                Bravery = 9
-            };
+           modelBuilder.Entity<PetCard>().HasData(
+               new PetCard
+                {
+                    ID = 1,
+                    Name = "Tucker",
+                    ImageURL = "",
+                    Sex = "Male",
+                    Owner = "andrewbc",
+                    AgeYears = 2,
+                    Birthday = DateTime.Parse("07/10/2018"),
+                    DateCreated = DateTime.Now,
+                    DateCollected = DateTime.Now,
+                    GoodDog = 8,
+                    Floofiness = 1,
+                    Energy = 8,
+                    Snuggles = 8,
+                    Appetite = 8,
+                    Bravery = 9
+                }
+               );
         }
 
         public DbSet<PetCard> PetCards { get; set; }

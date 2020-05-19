@@ -41,5 +41,34 @@ namespace DogsIRL_API.Controllers
             return await _petCardsService.GetPetCardsForOwnerByUsername(userName);
         }
 
+        [HttpPost]
+        public async Task<ActionResult<PetCard>> CreatePetCard(PetCard petcard)
+        {
+            await _petCardsService.CreatePetCard(petcard);
+            return CreatedAtAction("CreatePetCard", new { id = petcard.ID }, petcard);
+        }
+
+        [HttpDelete("{Id}")]
+        public async Task<ActionResult<PetCard>> DeletePetCard(int ID, PetCard petCard)
+        {
+            if (ID != petCard.ID)
+            {
+                return BadRequest();
+            }
+            await _petCardsService.DeletePetCard(petCard);
+            return NoContent();
+        }
+
+        //Shouldnt this take in ID?
+        [HttpPut("{Id}")]
+        public async Task<IActionResult> UpdatePetCard(int ID, PetCard petCard)
+        {
+            if(ID != petCard.ID)
+            {
+                return BadRequest();
+            }
+            await _petCardsService.UpdatePetCard(petCard);
+            return NoContent();
+        }
     }
 }

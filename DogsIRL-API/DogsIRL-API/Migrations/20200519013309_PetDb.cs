@@ -3,7 +3,7 @@ using Microsoft.EntityFrameworkCore.Migrations;
 
 namespace DogsIRL_API.Migrations
 {
-    public partial class getset : Migration
+    public partial class PetDb : Migration
     {
         protected override void Up(MigrationBuilder migrationBuilder)
         {
@@ -32,6 +32,11 @@ namespace DogsIRL_API.Migrations
                 {
                     table.PrimaryKey("PK_PetCards", x => x.ID);
                 });
+
+            migrationBuilder.InsertData(
+                table: "PetCards",
+                columns: new[] { "ID", "AgeYears", "Appetite", "Birthday", "Bravery", "DateCollected", "DateCreated", "Energy", "Floofiness", "GoodDog", "ImageURL", "Name", "Owner", "Sex", "Snuggles" },
+                values: new object[] { 1, 2, (short)8, new DateTime(2018, 7, 10, 0, 0, 0, 0, DateTimeKind.Unspecified), (short)9, new DateTime(2020, 5, 18, 18, 33, 8, 791, DateTimeKind.Local).AddTicks(1660), new DateTime(2020, 5, 18, 18, 33, 8, 778, DateTimeKind.Local).AddTicks(2790), (short)8, (short)1, (short)8, "", "Tucker", "andrewbc", "Male", (short)8 });
         }
 
         protected override void Down(MigrationBuilder migrationBuilder)

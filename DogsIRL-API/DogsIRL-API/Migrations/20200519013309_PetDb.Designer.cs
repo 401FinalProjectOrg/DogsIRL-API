@@ -10,8 +10,8 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace DogsIRL_API.Migrations
 {
     [DbContext(typeof(ApplicationDbContext))]
-    [Migration("20200518192930_seeded")]
-    partial class seeded
+    [Migration("20200519013309_PetDb")]
+    partial class PetDb
     {
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
@@ -82,8 +82,8 @@ namespace DogsIRL_API.Migrations
                             Appetite = (short)8,
                             Birthday = new DateTime(2018, 7, 10, 0, 0, 0, 0, DateTimeKind.Unspecified),
                             Bravery = (short)9,
-                            DateCollected = new DateTime(2020, 5, 18, 12, 29, 29, 767, DateTimeKind.Local).AddTicks(333),
-                            DateCreated = new DateTime(2020, 5, 18, 12, 29, 29, 759, DateTimeKind.Local).AddTicks(6462),
+                            DateCollected = new DateTime(2020, 5, 18, 18, 33, 8, 791, DateTimeKind.Local).AddTicks(1660),
+                            DateCreated = new DateTime(2020, 5, 18, 18, 33, 8, 778, DateTimeKind.Local).AddTicks(2790),
                             Energy = (short)8,
                             Floofiness = (short)1,
                             GoodDog = (short)8,

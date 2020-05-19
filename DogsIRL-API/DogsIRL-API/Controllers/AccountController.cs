@@ -24,6 +24,17 @@ namespace DogsIRL_API.Controllers
             _email = email;
         }
 
+        [HttpPost("login")]
+        public async Task<string> SignIn(SignInInput signInInput)
+        {
+            var result = await _signInManager.PasswordSignInAsync(signInInput.Username, signInInput.Password, isPersistent: false, false);
+            if (result.Succeeded)
+            {
+                var user = await _userManager.FindByNameAsync(signInInput.Username);
+                return user.UserName;
+            }
+            return null;
+        }
 
         [HttpPost("Register")]
         public async Task CreateAccount(RegisterInput registerInput)

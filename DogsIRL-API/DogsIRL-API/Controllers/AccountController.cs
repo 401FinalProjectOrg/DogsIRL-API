@@ -57,5 +57,10 @@ namespace DogsIRL_API.Controllers
             }
             
         }
+        [HttpPost("Logout")]
+        public async Task Logout()
+        {
+            await _signInManager.SignOutAsync();
+        }
     }
 }

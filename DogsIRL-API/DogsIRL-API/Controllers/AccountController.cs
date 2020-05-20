@@ -1,10 +1,13 @@
 ﻿using System;
+using System.Net;
 using System.Text;
 using System.Threading.Tasks;
 using DogsIRL_API.Models;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Identity.UI.Services;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.AspNetCore.Mvc.ModelBinding;
 
 namespace DogsIRL_API.Controllers
 {
@@ -25,21 +28,30 @@ namespace DogsIRL_API.Controllers
         }
 
         [HttpPost("login")]
-        public async Task<string> SignIn(SignInInput signInInput)
+        public async Task<ApplicationUser> SignIn(SignInInput signInInput)
         {
             var result = await _signInManager.PasswordSignInAsync(signInInput.Username, signInInput.Password, isPersistent: false, false);
             if (result.Succeeded)
             {
                 var user = await _userManager.FindByNameAsync(signInInput.Username);
-                return user.UserName;
+                return user;
             }
             return null;
         }
 
+        [HttpPost("logout")]
+        public async Task<JsonResult> Logout(string username)
+        {
+            await _signInManager.SignOutAsync();
+            JsonResult result = new JsonResult($"{username} successfully logged out.");
+            return result;
+        }
+
+
+        [AllowAnonymous]
         [HttpPost("Register")]
         public async Task CreateAccount(RegisterInput registerInput)
         {
-
             var user = new ApplicationUser
             {
                 UserName = registerInput.Username,
@@ -50,12 +62,16 @@ namespace DogsIRL_API.Controllers
             if (result.Succeeded)
             {
                 await _signInManager.SignInAsync(user, isPersistent: false);
-                StringBuilder sb = new StringBuilder();
-                sb.AppendLine("<h1> Welcome to DogsIRL! </h1>");
-                sb.AppendLine("<p> Create a profile card for your pup by tapping the create button! </p>");
-                await _email.SendEmailAsync($"{user.Email}", "Registration Complete", sb.ToString());
+                SendWelcomeEmail(user);
             }
-            
+        }
+
+        private protected async void SendWelcomeEmail(ApplicationUser user)
+        {
+            StringBuilder sb = new StringBuilder();
+            sb.AppendLine($"<h1> Welcome, {user.UserName}, to DogsIRL! </h1>");
+            sb.AppendLine("<p>To get started: enter the app and create a profile card for your pup by tapping the create button!</p>");
+            await _email.SendEmailAsync($"{user.Email}", "Dogs IRL Registration Complete", sb.ToString());
         }
     }
 }

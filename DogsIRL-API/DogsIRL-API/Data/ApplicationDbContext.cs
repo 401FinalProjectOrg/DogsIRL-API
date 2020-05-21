@@ -16,7 +16,9 @@ namespace DogsIRL_API.Data
 
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {
-           modelBuilder.Entity<PetCard>().HasData(
+            modelBuilder.Entity<CollectedPetCard>().HasKey(collect => new { collect.PetCardID, collect.Username });
+
+            modelBuilder.Entity<PetCard>().HasData(
                new PetCard
                 {
                     ID = 1,
@@ -39,5 +41,7 @@ namespace DogsIRL_API.Data
         }
 
         public DbSet<PetCard> PetCards { get; set; }
+        public DbSet<CollectedPetCard> CollectedPetCards { get; set; }
+
     }
 }

@@ -1,11 +1,13 @@
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Text;
 using System.Threading.Tasks;
 using DogsIRL_API.Data;
 using DogsIRL_API.Models;
 using DogsIRL_API.Models.Interfaces;
 using DogsIRL_API.Models.Services;
+using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.HttpsPolicy;
@@ -17,6 +19,7 @@ using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
 using Microsoft.Extensions.Logging;
+using Microsoft.IdentityModel.Tokens;
 
 namespace DogsIRL_API
 {
@@ -48,10 +51,34 @@ namespace DogsIRL_API
                 options.UseSqlServer(Configuration.GetConnectionString("UserConnection"));
             });
 
-            // UserIdentity
-            services.AddIdentity<ApplicationUser, IdentityRole>()
-                .AddEntityFrameworkStores<AccountDbContext>()
-                .AddDefaultTokenProviders();
+            string key = Configuration["AuthKey"]; //this should be same which is used while creating token      
+            var issuer = "https://dogsirl-api.azurewebsites.net";  //this should be same which is used while creating token  
+
+            services.AddAuthentication(JwtBearerDefaults.AuthenticationScheme)
+                    .AddJwtBearer(options =>
+                    {
+                         options.TokenValidationParameters = new TokenValidationParameters
+                          {
+                                  ValidateIssuer = true,
+                                  ValidateAudience = true,
+                                  ValidateIssuerSigningKey = true,
+                                  ValidIssuer = issuer,
+                                  ValidAudience = issuer,
+                                  IssuerSigningKey = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(key))
+                          };
+
+                          options.Events = new JwtBearerEvents
+                          {
+                              OnAuthenticationFailed = context =>
+                              {
+                                  if (context.Exception.GetType() == typeof(SecurityTokenExpiredException))
+                                  {
+                                      context.Response.Headers.Add("Token-Expired", "true");
+                                  }
+                                  return Task.CompletedTask;
+                              }
+                          };
+                    });
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
@@ -62,12 +89,10 @@ namespace DogsIRL_API
                 app.UseDeveloperExceptionPage();
             }
 
-            app.UseHttpsRedirection();
-
+            app.UseStaticFiles();
             app.UseRouting();
             app.UseAuthentication();
             app.UseAuthorization();
-            app.UseStaticFiles();
             app.UseEndpoints(endpoints =>
             {
                 endpoints.MapControllerRoute("default", "{controller=Home}/{action=Index}/{id?}");

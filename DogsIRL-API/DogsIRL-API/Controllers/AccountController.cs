@@ -1,5 +1,9 @@
 ﻿using System;
+using System.Collections.Generic;
+using System.IdentityModel.Tokens.Jwt;
 using System.Net;
+using System.Net.Http;
+using System.Security.Claims;
 using System.Text;
 using System.Threading.Tasks;
 using DogsIRL_API.Models;
@@ -8,6 +12,11 @@ using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Identity.UI.Services;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.ModelBinding;
+using Microsoft.Extensions.Configuration;
+using Microsoft.IdentityModel.Tokens;
+using Newtonsoft.Json;
+using SendGrid;
+using SendGrid.Helpers.Mail;
 
 namespace DogsIRL_API.Controllers
 {
@@ -20,6 +29,7 @@ namespace DogsIRL_API.Controllers
         private SignInManager<ApplicationUser> _signInManager;
         private IEmailSender _email;
 
+
         public AccountController(UserManager<ApplicationUser> userManager, IEmailSender email,  SignInManager<ApplicationUser> signIn)
         {
             _userManager = userManager;
@@ -31,6 +41,8 @@ namespace DogsIRL_API.Controllers
         public async Task<ApplicationUser> SignIn(SignInInput signInInput)
         {
             var result = await _signInManager.PasswordSignInAsync(signInInput.Username, signInInput.Password, isPersistent: false, false);
+            
+            
             if (result.Succeeded)
             {
                 var user = await _userManager.FindByNameAsync(signInInput.Username);
@@ -78,5 +90,7 @@ namespace DogsIRL_API.Controllers
         {
             await _signInManager.SignOutAsync();
         }
+
+        
     }
 }

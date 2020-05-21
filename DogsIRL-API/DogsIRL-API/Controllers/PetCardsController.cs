@@ -11,8 +11,8 @@ using Microsoft.Extensions.Logging;
 namespace DogsIRL_API.Controllers
 {
     [ApiController]
-    [Authorize]
     [Route("api/[controller]")]
+    [Authorize]
     public class PetCardsController : ControllerBase
     {
         private readonly IPetCardsManager _petCardsService;
@@ -61,7 +61,6 @@ namespace DogsIRL_API.Controllers
             return NoContent();
         }
 
-        //Shouldnt this take in ID?
         [HttpPut("{Id}")]
         public async Task<IActionResult> UpdatePetCard(int ID, PetCard petCard)
         {

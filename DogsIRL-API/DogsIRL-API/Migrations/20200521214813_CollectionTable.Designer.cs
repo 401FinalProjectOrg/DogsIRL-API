@@ -10,8 +10,8 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace DogsIRL_API.Migrations
 {
     [DbContext(typeof(ApplicationDbContext))]
-    [Migration("20200519013309_PetDb")]
-    partial class PetDb
+    [Migration("20200521214813_CollectionTable")]
+    partial class CollectionTable
     {
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
@@ -20,6 +20,19 @@ namespace DogsIRL_API.Migrations
                 .HasAnnotation("ProductVersion", "3.1.4")
                 .HasAnnotation("Relational:MaxIdentifierLength", 128)
                 .HasAnnotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn);
+
+            modelBuilder.Entity("DogsIRL_API.Models.CollectedPetCard", b =>
+                {
+                    b.Property<int>("PetCardID")
+                        .HasColumnType("int");
+
+                    b.Property<string>("Username")
+                        .HasColumnType("nvarchar(450)");
+
+                    b.HasKey("PetCardID", "Username");
+
+                    b.ToTable("CollectedPetCards");
+                });
 
             modelBuilder.Entity("DogsIRL_API.Models.PetCard", b =>
                 {
@@ -82,8 +95,8 @@ namespace DogsIRL_API.Migrations
                             Appetite = (short)8,
                             Birthday = new DateTime(2018, 7, 10, 0, 0, 0, 0, DateTimeKind.Unspecified),
                             Bravery = (short)9,
-                            DateCollected = new DateTime(2020, 5, 18, 18, 33, 8, 791, DateTimeKind.Local).AddTicks(1660),
-                            DateCreated = new DateTime(2020, 5, 18, 18, 33, 8, 778, DateTimeKind.Local).AddTicks(2790),
+                            DateCollected = new DateTime(2020, 5, 21, 14, 48, 13, 243, DateTimeKind.Local).AddTicks(4810),
+                            DateCreated = new DateTime(2020, 5, 21, 14, 48, 13, 231, DateTimeKind.Local).AddTicks(100),
                             Energy = (short)8,
                             Floofiness = (short)1,
                             GoodDog = (short)8,
@@ -93,6 +106,15 @@ namespace DogsIRL_API.Migrations
                             Sex = "Male",
                             Snuggles = (short)8
                         });
+                });
+
+            modelBuilder.Entity("DogsIRL_API.Models.CollectedPetCard", b =>
+                {
+                    b.HasOne("DogsIRL_API.Models.PetCard", "PetCard")
+                        .WithMany()
+                        .HasForeignKey("PetCardID")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
                 });
 #pragma warning restore 612, 618
         }

@@ -12,6 +12,7 @@ namespace DogsIRL_API.Models.Services
     {
         private readonly ApplicationDbContext _petCardsContext;
 
+
         public PetCardsService(ApplicationDbContext petCardsContext)
         {
             _petCardsContext = petCardsContext;
@@ -54,5 +55,47 @@ namespace DogsIRL_API.Models.Services
             await _petCardsContext.SaveChangesAsync();
             return petCard;
         }
+
+
+        // Collect Petcard in park
+        public async Task<CollectedPetCard> AddPetCardToUserCollection(PetCard petCard, string username)
+        {
+            bool alreadyExist = await CheckCollectedPetCardExist(petCard.ID, username);
+
+            if (alreadyExist)
+            {
+                return null;
+            }
+            else
+            {
+                CollectedPetCard newCPC = new CollectedPetCard();
+                newCPC.PetCardID = petCard.ID;
+                newCPC.Username = username;
+                _petCardsContext.CollectedPetCards.Add(newCPC);
+                await _petCardsContext.SaveChangesAsync();
+                return newCPC;
+            }
+        }
+
+        public async Task<bool> CheckCollectedPetCardExist(int petcardId, string username)
+        {
+            var result = await _petCardsContext.CollectedPetCards.FindAsync(new { petcardId, username });
+
+            if(result == null)
+            {
+                return false;
+            }
+            else
+            {
+                return true;
+            }
+        }
+
+        public async Task<List<CollectedPetCard>> GetAllCollectedPetCardsForUser(string username)
+        {
+            List<CollectedPetCard> list = await _petCardsContext.CollectedPetCards.Where(cpc => cpc.Username == username).ToListAsync();
+            return list;
+        }
+
     }
 }

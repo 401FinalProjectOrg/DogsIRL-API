@@ -30,7 +30,7 @@ namespace DogsIRL_API.Controllers
             await _petCardsService.AddPetCardToUserCollection(petCard, input.Username);
         }
 
-        [HttpGet("username")]
+        [HttpGet("{username}")]
         public async Task<List<CollectedPetCard>> GetAllCollectedPetCardsForUser(string username)
         {
             List<CollectedPetCard> list = await _petCardsService.GetAllCollectedPetCardsForUser(username);

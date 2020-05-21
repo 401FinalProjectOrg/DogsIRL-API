@@ -79,7 +79,7 @@ namespace DogsIRL_API.Models.Services
 
         public async Task<bool> CheckCollectedPetCardExist(int petcardId, string username)
         {
-            var result = await _petCardsContext.CollectedPetCards.FindAsync(new { petcardId, username });
+            var result = await _petCardsContext.CollectedPetCards.FindAsync(petcardId, username);
 
             if(result == null)
             {
@@ -93,7 +93,9 @@ namespace DogsIRL_API.Models.Services
 
         public async Task<List<CollectedPetCard>> GetAllCollectedPetCardsForUser(string username)
         {
-            List<CollectedPetCard> list = await _petCardsContext.CollectedPetCards.Where(cpc => cpc.Username == username).ToListAsync();
+            List<CollectedPetCard> list = await _petCardsContext.CollectedPetCards
+                .Where(cpc => cpc.Username == username)
+                .Include(cpc => cpc.PetCard).ToListAsync();
             return list;
         }
 

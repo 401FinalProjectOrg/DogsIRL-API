@@ -51,9 +51,12 @@ namespace DogsIRL_API
                 options.UseSqlServer(Configuration.GetConnectionString("UserConnection"));
             });
 
+            services.AddIdentity<ApplicationUser, IdentityRole>()
+                .AddEntityFrameworkStores<AccountDbContext>();
+
             string key = Configuration["AuthKey"]; //this should be same which is used while creating token      
             var issuer = "https://dogsirl-api.azurewebsites.net";  //this should be same which is used while creating token  
-
+            
             services.AddAuthentication(JwtBearerDefaults.AuthenticationScheme)
                     .AddJwtBearer(options =>
                     {

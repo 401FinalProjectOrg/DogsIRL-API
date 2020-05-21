@@ -4,6 +4,7 @@ using System.Linq;
 using System.Threading.Tasks;
 using DogsIRL_API.Models;
 using DogsIRL_API.Models.Interfaces;
+using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Logging;
@@ -12,7 +13,7 @@ namespace DogsIRL_API.Controllers
 {
     [ApiController]
     [Route("api/[controller]")]
-    [Authorize]
+    [Authorize(AuthenticationSchemes = JwtBearerDefaults.AuthenticationScheme)]
     public class PetCardsController : ControllerBase
     {
         private readonly IPetCardsManager _petCardsService;

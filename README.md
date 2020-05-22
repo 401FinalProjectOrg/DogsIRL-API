@@ -4,7 +4,7 @@
 - Carrington Beard
 - Teddy Damian
 
-### Problem Domain
+## Problem Domain
 DogsIRL is a social platform for pets to interact with other pets. People like pet pictures and want to interact with them more. Pets increase happiness and emotional wellbeing. Login page, upload info/details: name, playfulness, fluffiness, snugability, vegetarian/carnivore, etc. Park page for interaction to view other puppies.
 Stretch goals: Add other animals, Rating system Interact with games
 

@@ -41,8 +41,7 @@ namespace DogsIRL_API.Controllers
         public async Task<ApplicationUser> SignIn(SignInInput signInInput)
         {
             var result = await _signInManager.PasswordSignInAsync(signInInput.Username, signInInput.Password, isPersistent: false, false);
-            
-            
+
             if (result.Succeeded)
             {
                 var user = await _userManager.FindByNameAsync(signInInput.Username);
@@ -60,7 +59,6 @@ namespace DogsIRL_API.Controllers
         }
 
 
-        [AllowAnonymous]
         [HttpPost("Register")]
         public async Task CreateAccount(RegisterInput registerInput)
         {

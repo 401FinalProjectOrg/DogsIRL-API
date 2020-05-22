@@ -23,7 +23,7 @@ namespace DogsIRL_API.Data
                 {
                     ID = 1,
                     Name = "Tucker",
-                    ImageURL = "",
+                    ImageURL = "https://dogsirl.blob.core.windows.net/dogs/Tucker.png",
                     Sex = "Male",
                     Owner = "andrewbc",
                     AgeYears = 2,

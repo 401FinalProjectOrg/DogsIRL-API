@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Security.Claims;
 using System.Threading.Tasks;
 using DogsIRL_API.Models;
 using DogsIRL_API.Models.Interfaces;
@@ -13,7 +14,7 @@ namespace DogsIRL_API.Controllers
     [ApiController]
     [Route("api/[controller]")]
     [Authorize(AuthenticationSchemes = JwtBearerDefaults.AuthenticationScheme)]
-    public class CollectionController
+    public class CollectionController : ControllerBase
     {
         private readonly IPetCardsManager _petCardsService;
 
@@ -25,16 +26,33 @@ namespace DogsIRL_API.Controllers
         [HttpPost]
         public async Task AddPetCardToUserCollection(CollectInput input)
         {
-            PetCard petCard = await _petCardsService.GetPetCardById(input.PetCardID);
-
-            await _petCardsService.AddPetCardToUserCollection(petCard, input.Username);
+            var identity = HttpContext.User.Identity as ClaimsIdentity;
+            if (identity != null)
+            {
+                string tokenUsername = identity.FindFirst("username").Value;
+                if (tokenUsername == input.Username)
+                {
+                    PetCard petCard = await _petCardsService.GetPetCardById(input.PetCardID);
+                    await _petCardsService.AddPetCardToUserCollection(petCard, input.Username);
+                }
+            }
         }
 
         [HttpGet("{username}")]
         public async Task<List<CollectedPetCard>> GetAllCollectedPetCardsForUser(string username)
         {
-            List<CollectedPetCard> list = await _petCardsService.GetAllCollectedPetCardsForUser(username);
-            return list;
+            var identity = HttpContext.User.Identity as ClaimsIdentity;
+            if (identity != null)
+            {
+                string tokenUsername = identity.FindFirst("username").Value;
+                if (tokenUsername == username)
+                {
+                    List<CollectedPetCard> list = await _petCardsService.GetAllCollectedPetCardsForUser(username);
+                    return list;
+                }
+            }
+            return null;
+            
         }
 
     }

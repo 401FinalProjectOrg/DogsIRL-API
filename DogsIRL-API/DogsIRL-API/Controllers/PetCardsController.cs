@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Security.Claims;
 using System.Threading.Tasks;
 using DogsIRL_API.Models;
 using DogsIRL_API.Models.Interfaces;
@@ -39,38 +40,75 @@ namespace DogsIRL_API.Controllers
         }
 
         [HttpGet("user/{userName}")]
-        public async Task<List<PetCard>> GetAllPetCardsForOwnerByUserName(string userName)
+        public async Task<List<PetCard>> GetAllPetCardsForOwnerByUserName(string username)
         {
-            return await _petCardsService.GetPetCardsForOwnerByUsername(userName);
+            var identity = HttpContext.User.Identity as ClaimsIdentity;
+            if (identity != null)
+            {
+                string tokenUsername = identity.FindFirst("username").Value;
+                if(tokenUsername == username)
+                {
+                    return await _petCardsService.GetPetCardsForOwnerByUsername(username);
+                }
+            }
+            return null;
         }
 
         [HttpPost]
         public async Task<ActionResult<PetCard>> CreatePetCard(PetCard petcard)
         {
-            await _petCardsService.CreatePetCard(petcard);
-            return CreatedAtAction("CreatePetCard", new { id = petcard.ID }, petcard);
+            var identity = HttpContext.User.Identity as ClaimsIdentity;
+            if (identity != null)
+            {
+                string tokenUsername = identity.FindFirst("username").Value;
+                if (tokenUsername == petcard.Owner)
+                {
+                    await _petCardsService.CreatePetCard(petcard);
+                    return CreatedAtAction("CreatePetCard", new { id = petcard.ID }, petcard);
+                }
+            }
+            return null;
         }
 
         [HttpDelete("{Id}")]
         public async Task<ActionResult<PetCard>> DeletePetCard(int ID, PetCard petCard)
         {
-            if (ID != petCard.ID)
+            var identity = HttpContext.User.Identity as ClaimsIdentity;
+            if (identity != null)
             {
-                return BadRequest();
+                string tokenUsername = identity.FindFirst("username").Value;
+                if (tokenUsername == petCard.Owner)
+                {
+                    if (ID != petCard.ID)
+                    {
+                        return BadRequest();
+                    }
+                    await _petCardsService.DeletePetCard(petCard);
+                    return NoContent();
+                }
             }
-            await _petCardsService.DeletePetCard(petCard);
-            return NoContent();
+            return null;
+            
         }
 
         [HttpPut("{Id}")]
         public async Task<IActionResult> UpdatePetCard(int ID, PetCard petCard)
         {
-            if(ID != petCard.ID)
+            var identity = HttpContext.User.Identity as ClaimsIdentity;
+            if (identity != null)
             {
-                return BadRequest();
+                string tokenUsername = identity.FindFirst("username").Value;
+                if (tokenUsername == petCard.Owner)
+                {
+                    if (ID != petCard.ID)
+                    {
+                        return BadRequest();
+                    }
+                    await _petCardsService.UpdatePetCard(petCard);
+                    return NoContent();
+                }
             }
-            await _petCardsService.UpdatePetCard(petCard);
-            return NoContent();
+            return null;
         }
     }
 }

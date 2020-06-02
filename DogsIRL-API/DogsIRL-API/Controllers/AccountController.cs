@@ -28,24 +28,25 @@ namespace DogsIRL_API.Controllers
         private UserManager<ApplicationUser> _userManager;
         private SignInManager<ApplicationUser> _signInManager;
         private IEmailSender _email;
+        private IConfiguration _configuration;
 
-
-        public AccountController(UserManager<ApplicationUser> userManager, IEmailSender email,  SignInManager<ApplicationUser> signIn)
+        public AccountController(UserManager<ApplicationUser> userManager, IEmailSender email,  SignInManager<ApplicationUser> signIn, IConfiguration configuration)
         {
             _userManager = userManager;
             _signInManager = signIn;
             _email = email;
+            _configuration = configuration;
         }
 
         [HttpPost("login")]
-        public async Task<ApplicationUser> SignIn(SignInInput signInInput)
+        public async Task<string> SignIn(SignInInput signInInput)
         {
             var result = await _signInManager.PasswordSignInAsync(signInInput.Username, signInInput.Password, isPersistent: false, false);
 
             if (result.Succeeded)
             {
-                var user = await _userManager.FindByNameAsync(signInInput.Username);
-                return user;
+                string JwtToken = GetToken(signInInput.Username);
+                return JwtToken;
             }
             return null;
         }
@@ -89,6 +90,25 @@ namespace DogsIRL_API.Controllers
             await _signInManager.SignOutAsync();
         }
 
-        
+        // Code for JWT token creation taken from https://www.c-sharpcorner.com/article/asp-net-core-web-api-creating-and-validating-jwt-json-web-token/ 5/20/2020
+        private protected string GetToken(string userId)
+        {
+            string key = _configuration["AuthKey"]; // Secret key
+            var issuer = "https://dogsirl-api.azurewebsites.net";
+            var securityKey = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(key));
+            var credentials = new SigningCredentials(securityKey, SecurityAlgorithms.HmacSha256);
+
+            var permClaims = new List<Claim>();
+            permClaims.Add(new Claim(JwtRegisteredClaimNames.Jti, Guid.NewGuid().ToString()));
+            permClaims.Add(new Claim("valid", "1"));
+            permClaims.Add(new Claim("userId", userId));
+
+            var token = new JwtSecurityToken(issuer,
+                issuer, // audience same as issuer in our case
+                permClaims,
+                expires: DateTime.Now.AddDays(1),
+                signingCredentials: credentials);
+            return new JwtSecurityTokenHandler().WriteToken(token);
+        }
     }
 }

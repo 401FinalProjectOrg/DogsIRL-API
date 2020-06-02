@@ -68,6 +68,7 @@ namespace DogsIRL_API
                                   ValidIssuer = issuer,
                                   ValidAudience = issuer,
                                   IssuerSigningKey = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(key))
+                                  // check the userid in the claims of the token
                           };
 
                           options.Events = new JwtBearerEvents

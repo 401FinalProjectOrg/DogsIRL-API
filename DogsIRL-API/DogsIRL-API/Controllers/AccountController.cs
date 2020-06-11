@@ -6,6 +6,7 @@ using System.Net.Http;
 using System.Security.Claims;
 using System.Text;
 using System.Threading.Tasks;
+using System.Web;
 using DogsIRL_API.Models;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Identity;
@@ -14,9 +15,6 @@ using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.ModelBinding;
 using Microsoft.Extensions.Configuration;
 using Microsoft.IdentityModel.Tokens;
-using Newtonsoft.Json;
-using SendGrid;
-using SendGrid.Helpers.Mail;
 
 namespace DogsIRL_API.Controllers
 {
@@ -70,11 +68,17 @@ namespace DogsIRL_API.Controllers
             };
             var result = await _userManager.CreateAsync(user, registerInput.Password);
 
-            if (result.Succeeded)
+
+
+            if (!result.Succeeded)
             {
-                await _signInManager.SignInAsync(user, isPersistent: false);
-                SendWelcomeEmail(user);
+                return;
             }
+
+            await _signInManager.SignInAsync(user, isPersistent: false);
+            
+            SendAccountConfirmationEmail(user);
+            SendWelcomeEmail(user);
         }
 
         private protected async void SendWelcomeEmail(ApplicationUser user)
@@ -84,6 +88,32 @@ namespace DogsIRL_API.Controllers
             sb.AppendLine("<p>To get started: enter the app and create a profile card for your pup by tapping the create button!</p>");
             await _email.SendEmailAsync($"{user.Email}", "Dogs IRL Registration Complete", sb.ToString());
         }
+
+        private protected async void SendAccountConfirmationEmail(ApplicationUser user)
+        {
+            string confirmationUrl = @"https://dogsirl-api.azurewebsites.net/api/account/email-confirmation";
+            var token = await _userManager.GenerateEmailConfirmationTokenAsync(user);
+            var builder = new UriBuilder(confirmationUrl);
+            var query = HttpUtility.ParseQueryString(builder.Query);
+            query["email"] = user.Email;
+            query["token"] = token;
+            builder.Query = query.ToString();
+            string url = builder.ToString();
+            await _email.SendEmailAsync(user.Email,
+               "Dogs IRL Email Confirmation", $"Welcome to Dogs IRL! Please confirm your account by clicking <a href={url}>here</a>");
+        }
+
+        [HttpGet("email-confirmation")]
+        public async Task<string> ConfirmEmail(string token, string email)
+        {
+            var user = await _userManager.FindByEmailAsync(email);
+            if (user == null)
+                return "Error";
+
+            var result = await _userManager.ConfirmEmailAsync(user, token);
+            return result.Succeeded ? $"{nameof(ConfirmEmail)} confirmed!" : "Error during email validation.";
+        }
+
         [HttpPost("Logout")]
         public async Task Logout()
         {

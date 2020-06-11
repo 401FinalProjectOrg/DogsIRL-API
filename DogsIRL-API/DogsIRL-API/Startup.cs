@@ -51,7 +51,10 @@ namespace DogsIRL_API
                 options.UseSqlServer(Configuration.GetConnectionString("UserConnection"));
             });
 
-            services.AddIdentity<ApplicationUser, IdentityRole>()
+            services.AddIdentity<ApplicationUser, IdentityRole>(options =>
+            {
+                options.SignIn.RequireConfirmedEmail = true;
+            })
                 .AddEntityFrameworkStores<AccountDbContext>();
 
             string key = Configuration["AuthKey"]; //this should be same which is used while creating token      

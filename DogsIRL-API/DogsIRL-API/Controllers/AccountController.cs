@@ -74,11 +74,8 @@ namespace DogsIRL_API.Controllers
             {
                 return;
             }
-
-            await _signInManager.SignInAsync(user, isPersistent: false);
             
             SendAccountConfirmationEmail(user);
-            SendWelcomeEmail(user);
         }
 
         private protected async void SendWelcomeEmail(ApplicationUser user)

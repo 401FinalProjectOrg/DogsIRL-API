@@ -58,7 +58,7 @@ namespace DogsIRL_API.Controllers
         }
 
 
-        [HttpPost("Register")]
+        [HttpPost("register")]
         public async Task CreateAccount(RegisterInput registerInput)
         {
             var user = new ApplicationUser

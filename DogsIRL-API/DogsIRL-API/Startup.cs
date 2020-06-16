@@ -55,8 +55,8 @@ namespace DogsIRL_API
             {
                 options.SignIn.RequireConfirmedEmail = true;
             })
-                .AddEntityFrameworkStores<AccountDbContext>();
-
+                .AddEntityFrameworkStores<AccountDbContext>()
+                .AddDefaultTokenProviders();
             string key = Configuration["AuthKey"]; //this should be same which is used while creating token      
             var issuer = "https://dogsirl-api.azurewebsites.net";  //this should be same which is used while creating token  
             

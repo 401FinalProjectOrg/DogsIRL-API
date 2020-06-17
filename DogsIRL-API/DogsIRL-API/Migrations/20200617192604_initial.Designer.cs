@@ -10,7 +10,7 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace DogsIRL_API.Migrations
 {
     [DbContext(typeof(ApplicationDbContext))]
-    [Migration("20200521225503_initial")]
+    [Migration("20200617192604_initial")]
     partial class initial
     {
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
@@ -95,12 +95,12 @@ namespace DogsIRL_API.Migrations
                             Appetite = (short)8,
                             Birthday = new DateTime(2018, 7, 10, 0, 0, 0, 0, DateTimeKind.Unspecified),
                             Bravery = (short)9,
-                            DateCollected = new DateTime(2020, 5, 21, 15, 55, 2, 827, DateTimeKind.Local).AddTicks(200),
-                            DateCreated = new DateTime(2020, 5, 21, 15, 55, 2, 813, DateTimeKind.Local).AddTicks(2640),
+                            DateCollected = new DateTime(2020, 6, 17, 12, 26, 4, 623, DateTimeKind.Local).AddTicks(2200),
+                            DateCreated = new DateTime(2020, 6, 17, 12, 26, 4, 608, DateTimeKind.Local).AddTicks(8590),
                             Energy = (short)8,
                             Floofiness = (short)1,
                             GoodDog = (short)8,
-                            ImageURL = "",
+                            ImageURL = "https://dogsirl.blob.core.windows.net/dogs/Tucker.png",
                             Name = "Tucker",
                             Owner = "andrewbc",
                             Sex = "Male",

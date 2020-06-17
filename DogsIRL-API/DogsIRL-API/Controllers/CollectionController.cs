@@ -41,17 +41,19 @@ namespace DogsIRL_API.Controllers
         [HttpGet("{username}")]
         public async Task<List<CollectedPetCard>> GetAllCollectedPetCardsForUser(string username)
         {
+            List<CollectedPetCard> list = new List<CollectedPetCard>();
+
             var identity = HttpContext.User.Identity as ClaimsIdentity;
             if (identity != null)
             {
                 string tokenUsername = identity.FindFirst("username").Value;
                 if (tokenUsername == username)
                 {
-                    List<CollectedPetCard> list = await _petCardsService.GetAllCollectedPetCardsForUser(username);
+                    list = await _petCardsService.GetAllCollectedPetCardsForUser(username);
                     return list;
                 }
             }
-            return null;
+            return list;
             
         }
 

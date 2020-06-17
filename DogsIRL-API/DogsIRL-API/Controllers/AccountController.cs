@@ -88,7 +88,7 @@ namespace DogsIRL_API.Controllers
 
         private protected async void SendAccountConfirmationEmail(ApplicationUser user)
         {
-            string confirmationUrl = @"https://dogsirl-api.azurewebsites.net/api/account/email-confirmation";
+            string confirmationUrl = @"https://localhost:5001/api/account/email-confirmation";
             var token = await _userManager.GenerateEmailConfirmationTokenAsync(user);
             var builder = new UriBuilder(confirmationUrl);
             var query = HttpUtility.ParseQueryString(builder.Query);

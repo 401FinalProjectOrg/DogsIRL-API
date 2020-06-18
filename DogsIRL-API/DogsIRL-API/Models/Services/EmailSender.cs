@@ -29,7 +29,7 @@ namespace DogsIRL_API.Models.Services
             SendGridClient client = new SendGridClient(_configuration["SendGrid-Key"]);
             SendGridMessage msg = new SendGridMessage();
 
-            msg.SetFrom("admin@DogsIRL.com", "Teddy & Carrington & Andrew");
+            msg.SetFrom("admin@DogsIRL.com", "Teddy & Carrington & Andrew & Brody");
             msg.AddTo(email);
             msg.SetSubject(subject);
             msg.AddContent(MimeType.Html, htmlMessage);

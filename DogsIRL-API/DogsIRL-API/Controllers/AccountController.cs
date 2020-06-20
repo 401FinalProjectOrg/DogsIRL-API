@@ -1,18 +1,23 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.IdentityModel.Tokens.Jwt;
+using System.IO;
 using System.Net;
 using System.Net.Http;
 using System.Security.Claims;
+using System.Security.Policy;
 using System.Text;
 using System.Threading.Tasks;
 using System.Web;
 using DogsIRL_API.Models;
 using Microsoft.AspNetCore.Authorization;
+using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Identity.UI.Services;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.ModelBinding;
+using Microsoft.AspNetCore.Mvc.Routing;
+using Microsoft.AspNetCore.Routing;
 using Microsoft.Extensions.Configuration;
 using Microsoft.IdentityModel.Tokens;
 
@@ -27,13 +32,17 @@ namespace DogsIRL_API.Controllers
         private SignInManager<ApplicationUser> _signInManager;
         private IEmailSender _email;
         private IConfiguration _configuration;
+        private LinkGenerator _linkGenerator;
+        private IHttpContextAccessor _httpContextAccessor;
 
-        public AccountController(UserManager<ApplicationUser> userManager, IEmailSender email,  SignInManager<ApplicationUser> signIn, IConfiguration configuration)
+        public AccountController(UserManager<ApplicationUser> userManager, IEmailSender email,  SignInManager<ApplicationUser> signIn, IConfiguration configuration, LinkGenerator linkGenerator, IHttpContextAccessor httpContextAccessor)
         {
             _userManager = userManager;
             _signInManager = signIn;
             _email = email;
             _configuration = configuration;
+            _linkGenerator = linkGenerator;
+            _httpContextAccessor = httpContextAccessor;
         }
 
         [HttpPost("login")]
@@ -111,14 +120,31 @@ namespace DogsIRL_API.Controllers
             return result.Succeeded ? $"{nameof(ConfirmEmail)} confirmed!" : "Error during email validation.";
         }
 
-        [HttpPost("Logout")]
-        public async Task Logout()
+        [HttpPost("forgot-password")]
+        public async Task<bool> ForgotPassword(EmailInput input)
         {
-            await _signInManager.SignOutAsync();
+            var user = await _userManager.FindByEmailAsync(input.Email);
+            if (user == null || !await _userManager.IsEmailConfirmedAsync(user))
+            {
+                return false;
+            }
+
+            string resetCode = await _userManager.GeneratePasswordResetTokenAsync(user);
+
+            var callbackUrl = _linkGenerator.GetUriByAction(_httpContextAccessor.HttpContext.Request.HttpContext, "reset-password", "Account", new { userEmail = user.Email, code = resetCode }, pathBase: "/api");
+            await _email.SendEmailAsync(user.Email, "Reset Password", $"A request was made to reset your password. To do so, click <a href={callbackUrl}>here</a>. If you did not make this request, ignore this message. If you are receiving multiple messages about resetting your password that you did not request, contact the DogsIRL team at help@dogs-irl.com");
+            return true;
         }
 
-        // Code for JWT token creation taken from https://www.c-sharpcorner.com/article/asp-net-core-web-api-creating-and-validating-jwt-json-web-token/ 5/20/2020
-        private protected string GetToken(string username)
+        [HttpGet("reset-password")]
+        public async Task<string> ResetPassword()
+        {
+
+            return "Reset Password route hit";
+        }
+
+            // Code for JWT token creation taken from https://www.c-sharpcorner.com/article/asp-net-core-web-api-creating-and-validating-jwt-json-web-token/ 5/20/2020
+            private protected string GetToken(string username)
         {
             string key = _configuration["AuthKey"]; // Secret key
             var issuer = "https://dogsirl-api.azurewebsites.net";

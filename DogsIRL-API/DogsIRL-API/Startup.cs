@@ -53,6 +53,7 @@ namespace DogsIRL_API
 
             services.AddIdentity<ApplicationUser, IdentityRole>(options =>
             {
+                options.User.RequireUniqueEmail = true;
                 options.SignIn.RequireConfirmedEmail = true;
             })
                 .AddEntityFrameworkStores<AccountDbContext>()

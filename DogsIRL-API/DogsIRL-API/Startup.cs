@@ -38,6 +38,8 @@ namespace DogsIRL_API
         {
             services.AddMvc();
             services.AddControllers();
+            services.AddRazorPages();
+
             services.AddTransient<IPetCardsManager, PetCardsService>();
             services.AddTransient<IEmailSender, EmailSender>();
 
@@ -101,8 +103,10 @@ namespace DogsIRL_API
             app.UseRouting();
             app.UseAuthentication();
             app.UseAuthorization();
+            app.UseStaticFiles();
             app.UseEndpoints(endpoints =>
             {
+                endpoints.MapRazorPages();
                 endpoints.MapControllerRoute("default", "{controller=Home}/{action=Index}/{id?}");
             });
         }

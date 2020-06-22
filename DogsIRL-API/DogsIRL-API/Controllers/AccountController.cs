@@ -25,7 +25,7 @@ namespace DogsIRL_API.Controllers
 {
     [ApiController]
     [Route("api/[controller]")]
-    public class AccountController
+    public class AccountController : Controller
     {
 
         private UserManager<ApplicationUser> _userManager;
@@ -137,10 +137,9 @@ namespace DogsIRL_API.Controllers
         }
 
         [HttpGet("reset-password")]
-        public async Task<string> ResetPassword()
+        public async Task<IActionResult> ResetPassword()
         {
-
-            return "Reset Password route hit";
+            return View();
         }
 
             // Code for JWT token creation taken from https://www.c-sharpcorner.com/article/asp-net-core-web-api-creating-and-validating-jwt-json-web-token/ 5/20/2020

@@ -39,7 +39,7 @@ namespace DogsIRL_API.Controllers
             return await _petCardsService.GetPetCardById(petCardId);
         }
 
-        [HttpGet("user/{userName}")]
+        [HttpGet("user/{username}")]
         public async Task<List<PetCard>> GetAllPetCardsForOwnerByUserName(string username)
         {
             var identity = HttpContext.User.Identity as ClaimsIdentity;

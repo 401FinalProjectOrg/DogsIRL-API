@@ -25,7 +25,7 @@ namespace Dogs_IRL_API_tests
         [Fact]
         public void AccountControllerSignInIsCorrect()
         {
-            string testRoute = "https://localhost:44317/api/account/login/";
+            string testRoute = "https://localhost:5001/api/account/login/";
             SignInInput testInput = new SignInInput
             {
                 Username = "Test",

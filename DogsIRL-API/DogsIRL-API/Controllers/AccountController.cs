@@ -131,7 +131,7 @@ namespace DogsIRL_API.Controllers
 
             string resetCode = await _userManager.GeneratePasswordResetTokenAsync(user);
 
-            var callbackUrl = _linkGenerator.GetUriByAction(_httpContextAccessor.HttpContext.Request.HttpContext, "reset-password", "Account", new { userEmail = user.Email, code = resetCode }, pathBase: "/api");
+            var callbackUrl = _linkGenerator.GetUriByAction(_httpContextAccessor.HttpContext, "reset-password", "Account", new { userEmail = user.Email, code = resetCode }, pathBase: "/api");
             await _email.SendEmailAsync(user.Email, "Reset Password", $"A request was made to reset your password. To do so, click <a href={callbackUrl}>here</a>. If you did not make this request, ignore this message. If you are receiving multiple messages about resetting your password that you did not request, contact the DogsIRL team at help@dogs-irl.com");
             return true;
         }

@@ -117,7 +117,7 @@ namespace DogsIRL_API.Controllers
                 return "Error";
 
             var result = await _userManager.ConfirmEmailAsync(user, token);
-            return result.Succeeded ? $"{nameof(ConfirmEmail)} confirmed!" : "Error during email validation.";
+            return result.Succeeded ? $"Email for {user.UserName} confirmed!" : "Error during email validation.";
         }
 
         [HttpPost("forgot-password")]

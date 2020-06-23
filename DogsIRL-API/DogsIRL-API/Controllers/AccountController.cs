@@ -97,7 +97,7 @@ namespace DogsIRL_API.Controllers
 
         private protected async void SendAccountConfirmationEmail(ApplicationUser user)
         {
-            string confirmationUrl = @"https://localhost:5001/api/account/email-confirmation";
+            string confirmationUrl = _linkGenerator.GetUriByAction(_httpContextAccessor.HttpContext.Request.HttpContext, "email-confirmation", "Account", pathBase: "/api");
             var token = await _userManager.GenerateEmailConfirmationTokenAsync(user);
             var builder = new UriBuilder(confirmationUrl);
             var query = HttpUtility.ParseQueryString(builder.Query);
@@ -106,7 +106,7 @@ namespace DogsIRL_API.Controllers
             builder.Query = query.ToString();
             string url = builder.ToString();
             await _email.SendEmailAsync(user.Email,
-               "Dogs IRL Email Confirmation", $"Welcome to Dogs IRL! Please confirm your account by clicking <a href={url}>here</a>");
+               "Dogs IRL Email Confirmation", $"Welcome to Dogs IRL! Please confirm your account by clicking <a href=" + url + ">here</a>");
         }
 
         [HttpGet("email-confirmation")]
@@ -117,7 +117,7 @@ namespace DogsIRL_API.Controllers
                 return "Error";
 
             var result = await _userManager.ConfirmEmailAsync(user, token);
-            return result.Succeeded ? $"{nameof(ConfirmEmail)} confirmed!" : "Error during email validation.";
+            return result.Succeeded ? $"Email for {user.UserName} confirmed!" : "Error during email validation.";
         }
 
         [HttpPost("forgot-password")]

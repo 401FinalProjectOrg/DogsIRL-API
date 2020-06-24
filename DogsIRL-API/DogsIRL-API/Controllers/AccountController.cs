@@ -146,12 +146,13 @@ namespace DogsIRL_API.Controllers
         }
 
         [HttpPost("reset-password")]
-        public async Task<IActionResult> ResetPassword(ResetPasswordInput input)
+        public async Task/*<IActionResult>*/ ResetPassword(ResetPasswordInput input)
         {
             if (ModelState.IsValid)
             {
                 var user = await _userManager.FindByEmailAsync(input.Email);
                 // finish me
+                return; // temp return :(
             }
             // :)
         }

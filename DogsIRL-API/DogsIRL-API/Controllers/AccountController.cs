@@ -24,7 +24,6 @@ using Microsoft.IdentityModel.Tokens;
 
 namespace DogsIRL_API.Controllers
 {
-    [ApiController]
     [Route("api/[controller]")]
     public class AccountController : Controller
     {
@@ -136,17 +135,17 @@ namespace DogsIRL_API.Controllers
             await _email.SendEmailAsync(user.Email, "Reset Password", $"A request was made to reset your password. To do so, click <a href={callbackUrl}>here</a>. If you did not make this request, ignore this message. If you are receiving multiple messages about resetting your password that you did not request, contact the DogsIRL team at help@dogs-irl.com");
         }
 
-        [HttpGet("reset-password/{token}")] // figure out what the url looks like
-        public async Task<IActionResult> ResetPassword(string token, string email)
+        [HttpGet("reset-password")] // figure out what the url looks like
+        public IActionResult ResetPassword(string code, string userEmail)
         {
-            var model = new ResetPasswordInput { Token = token, Email = email };
+            ResetPasswordInput model = new ResetPasswordInput { Token = code, Email = userEmail };
             //model.Email = // how to get email from token?
             //model.Token = token;
             return View(model);
         }
 
         [HttpPost("reset-password")]
-        [ValidateAntiForgeryToken]
+        
         public async Task <IActionResult> ResetPassword(ResetPasswordInput input)
         {
             if (!ModelState.IsValid)

@@ -27,4 +27,7 @@
   <ItemGroup>
     <Folder Include="Models\Interfaces\" />
   </ItemGroup>
+  <ItemGroup>
+    <Content Remove="Views\Account\ResetPasswordConfirmation.cshtml" />
+  </ItemGroup>
 </Project>

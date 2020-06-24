@@ -137,28 +137,48 @@ namespace DogsIRL_API.Controllers
         }
 
         [HttpGet("reset-password/{token}")] // figure out what the url looks like
-        public async Task<IActionResult> ResetPassword(string token)
+        public async Task<IActionResult> ResetPassword(string token, string email)
         {
-            ResetPasswordInput model = new ResetPasswordInput();
-            model.Email = // how to get email from token?
-            model.Token = token;
+            var model = new ResetPasswordInput { Token = token, Email = email };
+            //model.Email = // how to get email from token?
+            //model.Token = token;
             return View(model);
         }
 
         [HttpPost("reset-password")]
-        public async Task/*<IActionResult>*/ ResetPassword(ResetPasswordInput input)
+        [ValidateAntiForgeryToken]
+        public async Task <IActionResult> ResetPassword(ResetPasswordInput input)
         {
-            if (ModelState.IsValid)
+            if (!ModelState.IsValid)
             {
-                var user = await _userManager.FindByEmailAsync(input.Email);
-                // finish me
-                return; // temp return :(
+                return View(input); // temp return :(
             }
-            // :)
+            var user = await _userManager.FindByEmailAsync(input.Email);
+            if (user == null)
+            {
+                RedirectToAction(nameof(ResetPasswordConfirm));
+            }
+            var resetPassResult = await _userManager.ResetPasswordAsync(user, input.Token, input.Password);
+            if (!resetPassResult.Succeeded)
+            {
+                foreach (var error in resetPassResult.Errors)
+                {
+                    ModelState.TryAddModelError(error.Code, error.Description);
+                }
+
+                return View();
+            }
+            return RedirectToAction(nameof(ResetPasswordConfirm));
         }
 
-            // Code for JWT token creation taken from https://www.c-sharpcorner.com/article/asp-net-core-web-api-creating-and-validating-jwt-json-web-token/ 5/20/2020
-            private protected string GetToken(string username)
+        [HttpGet]
+        public IActionResult ResetPasswordConfirm()
+        {
+            return View();
+        }
+
+        // Code for JWT token creation taken from https://www.c-sharpcorner.com/article/asp-net-core-web-api-creating-and-validating-jwt-json-web-token/ 5/20/2020
+        private protected string GetToken(string username)
         {
             string key = _configuration["AuthKey"]; // Secret key
             var issuer = "https://dogsirl-api.azurewebsites.net";

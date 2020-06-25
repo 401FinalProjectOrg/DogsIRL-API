@@ -24,8 +24,9 @@ using Microsoft.IdentityModel.Tokens;
 
 namespace DogsIRL_API.Controllers
 {
+    [ApiController]
     [Route("api/[controller]")]
-    public class AccountController : Controller
+    public class AccountController
     {
 
         private UserManager<ApplicationUser> _userManager;
@@ -76,14 +77,10 @@ namespace DogsIRL_API.Controllers
                 Email = registerInput.Email
             };
             var result = await _userManager.CreateAsync(user, registerInput.Password);
-
-
-
             if (!result.Succeeded)
             {
                 return;
             }
-            
             SendAccountConfirmationEmail(user);
         }
 
@@ -131,50 +128,10 @@ namespace DogsIRL_API.Controllers
 
             string resetCode = await _userManager.GeneratePasswordResetTokenAsync(user);
 
-            var callbackUrl = _linkGenerator.GetUriByAction(_httpContextAccessor.HttpContext, "reset-password", "Account", new { userEmail = user.Email, code = resetCode }, pathBase: "/api");
+            var callbackUrl = _linkGenerator.GetUriByAction(_httpContextAccessor.HttpContext, "reset-password", "Forms", new { userEmail = user.Email, code = resetCode });
             await _email.SendEmailAsync(user.Email, "Reset Password", $"A request was made to reset your password. To do so, click <a href={callbackUrl}>here</a>. If you did not make this request, ignore this message. If you are receiving multiple messages about resetting your password that you did not request, contact the DogsIRL team at help@dogs-irl.com");
         }
 
-        [HttpGet("reset-password")] // figure out what the url looks like
-        public IActionResult ResetPassword(string code, string userEmail)
-        {
-            ResetPasswordInput model = new ResetPasswordInput { Token = code, Email = userEmail };
-            //model.Email = // how to get email from token?
-            //model.Token = token;
-            return View(model);
-        }
-
-        [HttpPost("reset-password")]
-        
-        public async Task <IActionResult> ResetPassword(ResetPasswordInput input)
-        {
-            if (!ModelState.IsValid)
-            {
-                return View(input); // temp return :(
-            }
-            var user = await _userManager.FindByEmailAsync(input.Email);
-            if (user == null)
-            {
-                RedirectToAction(nameof(ResetPasswordConfirm));
-            }
-            var resetPassResult = await _userManager.ResetPasswordAsync(user, input.Token, input.Password);
-            if (!resetPassResult.Succeeded)
-            {
-                foreach (var error in resetPassResult.Errors)
-                {
-                    ModelState.TryAddModelError(error.Code, error.Description);
-                }
-
-                return View();
-            }
-            return RedirectToAction(nameof(ResetPasswordConfirm));
-        }
-
-        [HttpGet]
-        public IActionResult ResetPasswordConfirm()
-        {
-            return View();
-        }
 
         // Code for JWT token creation taken from https://www.c-sharpcorner.com/article/asp-net-core-web-api-creating-and-validating-jwt-json-web-token/ 5/20/2020
         private protected string GetToken(string username)

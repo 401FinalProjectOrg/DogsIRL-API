@@ -98,7 +98,8 @@ namespace DogsIRL_API
             {
                 app.UseDeveloperExceptionPage();
             }
-
+            app.UseCors(builder =>
+                builder.AllowAnyHeader().AllowAnyOrigin().AllowAnyMethod());
             app.UseStaticFiles();
             app.UseRouting();
             app.UseAuthentication();

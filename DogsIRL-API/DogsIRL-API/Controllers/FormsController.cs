@@ -44,7 +44,7 @@ namespace DogsIRL_API.Controllers
             if (inputtedPasswordIsSameAsCurrent)
             {
                 ModelState.AddModelError("Previous Password", "Cannot use the previous password");
-                return View();
+                return View(input);
             }
 
             var resetPassResult = await _userManager.ResetPasswordAsync(user, input.Token, input.Password);
@@ -54,7 +54,7 @@ namespace DogsIRL_API.Controllers
                 {
                     ModelState.TryAddModelError(error.Code, error.Description);
                 }
-                return View();
+                return View(input);
             }
             return RedirectToAction(nameof(ResetPasswordConfirm));
         }

@@ -94,7 +94,7 @@ namespace DogsIRL_API.Controllers
 
         private protected async void SendAccountConfirmationEmail(ApplicationUser user)
         {
-            string confirmationUrl = _linkGenerator.GetUriByAction(_httpContextAccessor.HttpContext.Request.HttpContext, "email-confirmation", "Account", pathBase: "/api");
+            string confirmationUrl = _linkGenerator.GetUriByAction(_httpContextAccessor.HttpContext.Response.HttpContext, "email-confirmation", "Account", pathBase: "/api");
             var token = await _userManager.GenerateEmailConfirmationTokenAsync(user);
             var builder = new UriBuilder(confirmationUrl);
             var query = HttpUtility.ParseQueryString(builder.Query);

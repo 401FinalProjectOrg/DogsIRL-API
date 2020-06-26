@@ -1,7 +1,7 @@
 ﻿using System;
 using Microsoft.EntityFrameworkCore.Migrations;
 
-namespace DogsIRL_API.Migrations.AccountDb
+namespace DogsIRL_API.Migrations
 {
     public partial class initial : Migration
     {

@@ -7,10 +7,10 @@ using Microsoft.EntityFrameworkCore.Metadata;
 using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 
-namespace DogsIRL_API.Migrations
+namespace DogsIRL_API.Migrations.ApplicationDb
 {
     [DbContext(typeof(ApplicationDbContext))]
-    [Migration("20200617192604_initial")]
+    [Migration("20200626182044_initial")]
     partial class initial
     {
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
@@ -95,8 +95,8 @@ namespace DogsIRL_API.Migrations
                             Appetite = (short)8,
                             Birthday = new DateTime(2018, 7, 10, 0, 0, 0, 0, DateTimeKind.Unspecified),
                             Bravery = (short)9,
-                            DateCollected = new DateTime(2020, 6, 17, 12, 26, 4, 623, DateTimeKind.Local).AddTicks(2200),
-                            DateCreated = new DateTime(2020, 6, 17, 12, 26, 4, 608, DateTimeKind.Local).AddTicks(8590),
+                            DateCollected = new DateTime(2020, 6, 26, 12, 20, 44, 447, DateTimeKind.Local).AddTicks(2230),
+                            DateCreated = new DateTime(2020, 6, 26, 12, 20, 44, 443, DateTimeKind.Local).AddTicks(2700),
                             Energy = (short)8,
                             Floofiness = (short)1,
                             GoodDog = (short)8,

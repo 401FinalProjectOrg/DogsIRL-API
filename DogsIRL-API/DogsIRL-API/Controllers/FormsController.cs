@@ -39,7 +39,13 @@ namespace DogsIRL_API.Controllers
             {
                 return RedirectToAction(nameof(ResetPasswordConfirm));
             }
-            
+
+            bool tokenIsValid = await _userManager.VerifyUserTokenAsync(user, _userManager.Options.Tokens.PasswordResetTokenProvider, "ResetPassword", input.Token);
+            if (!tokenIsValid)
+            {
+                return RedirectToAction(nameof(ResetPasswordConfirm));
+            }
+
             bool inputtedPasswordIsSameAsCurrent = await _userManager.CheckPasswordAsync(user, input.Password);
             if (inputtedPasswordIsSameAsCurrent)
             {

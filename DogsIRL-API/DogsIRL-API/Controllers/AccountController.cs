@@ -21,6 +21,7 @@ using Microsoft.AspNetCore.Mvc.Routing;
 using Microsoft.AspNetCore.Routing;
 using Microsoft.Extensions.Configuration;
 using Microsoft.IdentityModel.Tokens;
+using Newtonsoft.Json;
 
 namespace DogsIRL_API.Controllers
 {
@@ -69,7 +70,7 @@ namespace DogsIRL_API.Controllers
 
 
         [HttpPost("register")]
-        public async Task<IEnumerable<IdentityError>> CreateAccount(RegisterInput registerInput)
+        public async Task<ActionResult<List<IdentityError>>> CreateAccount(RegisterInput registerInput)
         {
             var user = new ApplicationUser
             {
@@ -79,10 +80,13 @@ namespace DogsIRL_API.Controllers
             var result = await _userManager.CreateAsync(user, registerInput.Password);
             if (!result.Succeeded)
             {
-                return result.Errors;
+                return new ConflictObjectResult(result.Errors);
             }
-            SendAccountConfirmationEmail(user);
-            return result.Errors;
+            else
+            {
+                SendAccountConfirmationEmail(user);
+                return new OkObjectResult(result.Errors);
+            }
         }
 
         private protected async void SendWelcomeEmail(ApplicationUser user)

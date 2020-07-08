@@ -1,4 +1,10 @@
 # DogsIRL
+
+## Deployment
+Our API is live on Azure!
+
+https://dogs-irl-api.azurewebsites.net/api/account/register
+
 ## Authors
 - Andrew Casper
 - Carrington Beard
@@ -50,6 +56,7 @@ Security - Protecting users emails and passwords as they are stored. We will use
 
 #### Patch Notes
 May 22 - 2020 || App Created.
+July 8 - 2020 || App Re-deployed to Azure with security improvements and increased account functionality
 
 #### Resources
 - Blob Storage - https://www.c-sharpcorner.com/article/xamarin-forms-upload-image-to-blob-storage/

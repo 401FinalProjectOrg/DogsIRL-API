@@ -117,7 +117,7 @@ namespace DogsIRL_API.Controllers
         }
 
         [HttpPost("UploadImage")]
-        async Task<string> UploadImage(IFormFile file)
+        public async Task<string> UploadImage(IFormFile file)
         {
             var filePath = Path.GetTempFileName();
             // stream io to save to file location

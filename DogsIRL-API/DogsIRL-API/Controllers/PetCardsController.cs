@@ -26,10 +26,11 @@ namespace DogsIRL_API.Controllers
         private readonly ILogger<PetCardsController> _logger;
 
 
-        public PetCardsController(ILogger<PetCardsController> logger, IPetCardsManager petCardsService)
+        public PetCardsController(ILogger<PetCardsController> logger, IPetCardsManager petCardsService, IConfiguration configuration)
         {
             _logger = logger;
             _petCardsService = petCardsService;
+            _configuration = configuration;
         }
 
         [HttpGet]

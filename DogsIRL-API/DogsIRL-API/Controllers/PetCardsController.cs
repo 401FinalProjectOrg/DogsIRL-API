@@ -118,30 +118,5 @@ namespace DogsIRL_API.Controllers
             return null;
         }
 
-        [HttpPost("UploadImage")]
-        public async Task<string> UploadImage(IFormFile formData)
-        {
-            var filePath = Path.GetTempFileName();
-            // stream io to save to file location
-            var stream = System.IO.File.Create(filePath);
-            var file = formData.OpenReadStream();
-            await file.CopyToAsync(stream);
-            string URL = await UploadToBlob(filePath);
-            return URL;
-        }
-
-
-        private async Task<string> UploadToBlob(string filePath)
-        {
-            Blob blob = new Blob(_configuration);
-            var name = Guid.NewGuid().ToString();
- 
-            // take the file at temp location to put into the blob storage
-            await blob.UploadFile("dogsirl", name, filePath);
-
-            // gets the blob from the storage, gives it an address
-            var resultBlob = await blob.GetBlob(name, "products");
-            return resultBlob.Uri.ToString();
-        }
     }
 }

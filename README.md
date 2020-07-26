@@ -57,6 +57,7 @@ Security - Protecting users emails and passwords as they are stored. We will use
 
 #### 🔨 Patch Notes
 May 22 - 2020 || App Created.
+
 July 8 - 2020 || App Re-deployed to Azure with security improvements and increased account functionality
 
 #### ☕ Resources

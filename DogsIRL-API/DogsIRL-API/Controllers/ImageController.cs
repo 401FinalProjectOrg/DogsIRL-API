@@ -26,9 +26,11 @@ namespace DogsIRL_API.Controllers
         {
             var filePath = Path.GetTempFileName();
             // stream io to save to file location
-            var stream = System.IO.File.Create(filePath);
+            using(var stream = System.IO.File.Create(filePath))
+            {
+              await file.CopyToAsync(stream);
+            }
             
-            await file.CopyToAsync(stream);
             string URL = await UploadToBlob(filePath);
             return URL;
         }

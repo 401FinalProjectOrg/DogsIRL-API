@@ -41,9 +41,16 @@ namespace DogsIRL_API.Models
 
         public async Task UploadFile(string containerName, string fileName, string filePath)
         {
-            var container = await GetContainer(containerName);
-            var blobFile = container.GetBlockBlobReference(fileName);
-            await blobFile.UploadFromFileAsync(filePath);
+            try
+            {
+                var container = await GetContainer(containerName);
+                var blobFile = container.GetBlockBlobReference(fileName);
+                await blobFile.UploadFromFileAsync(filePath);
+            }
+            catch(Exception e)
+            {
+                Console.WriteLine(e.Message);
+            }
         }
 
         public async Task DeleteBlob(string containerName, string fileName)

@@ -12,6 +12,7 @@ namespace DogsIRL_API.Models.Interfaces
         public Task<CollectedPetCard> AddPetCardToUserCollection(PetCard petCard, string username);
 
         // Read
+        public Task<PetCard> GetRandomPetCard();
         public Task<PetCard> GetPetCardById(int petCardId);
         public Task<List<PetCard>> GetPetCardsForOwnerByUsername(string ownerUserName);
         public Task<List<PetCard>> GetAllPetCards();

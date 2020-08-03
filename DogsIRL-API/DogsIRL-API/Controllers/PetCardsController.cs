@@ -34,6 +34,12 @@ namespace DogsIRL_API.Controllers
             _configuration = configuration;
         }
 
+        [HttpGet("random")]
+        public async Task<PetCard> GetRandomPetCard()
+        {
+            return await _petCardsService.GetRandomPetCard();
+        }
+
         [HttpGet]
         public async Task<List<PetCard>> GetAllPetCards()
         {

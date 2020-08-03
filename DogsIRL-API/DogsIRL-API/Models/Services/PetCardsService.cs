@@ -74,6 +74,14 @@ namespace DogsIRL_API.Models.Services
             return userPetCards;
         }
 
+        public async Task<PetCard> GetRandomPetCard()
+        {
+            var random = new Random();
+            List<PetCard> allPetCards = await _petCardsContext.PetCards.ToListAsync();
+            PetCard randomPetCard = allPetCards[random.Next(allPetCards.Count)];
+            return randomPetCard;
+        }
+
         /// <summary>
         /// Updates the pet card in the database that matches the ID of the inputted pet card with the inputted pet card
         /// </summary>

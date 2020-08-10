@@ -9,6 +9,7 @@ namespace DogsIRL_API.Models.Interfaces
     {
         public Interaction GetRandomInteraction();
         public Interaction GetInteractionById(int Id);
+        public IEnumerable<Interaction> GetAllInteractions();
         public Interaction AddInteraction(Interaction interaction);
         public Interaction EditInteraction(Interaction interaction);
         public Interaction DeleteInteraction(Interaction interaction);

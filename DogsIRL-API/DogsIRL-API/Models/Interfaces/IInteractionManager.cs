@@ -7,12 +7,12 @@ namespace DogsIRL_API.Models.Interfaces
 {
     public interface IInteractionManager
     {
-        public Interaction GetRandomInteraction();
-        public Interaction GetInteractionById(int Id);
-        public IEnumerable<Interaction> GetAllInteractions();
+        public Task<Interaction> GetRandomInteraction();
+        public Task<Interaction> GetInteractionById(int Id);
+        public Task<IEnumerable<Interaction>> GetAllInteractions();
         public Task<Interaction> AddInteraction(Interaction interaction);
-        public Interaction EditInteraction(Interaction interaction);
-        public Interaction DeleteInteraction(Interaction interaction);
+        public Task EditInteraction(Interaction interaction);
+        public Task DeleteInteraction(Interaction interaction);
         
     }
 }

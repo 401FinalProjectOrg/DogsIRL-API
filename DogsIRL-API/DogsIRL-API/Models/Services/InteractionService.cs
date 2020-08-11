@@ -1,5 +1,6 @@
 ﻿using DogsIRL_API.Data;
 using DogsIRL_API.Models.Interfaces;
+using Microsoft.EntityFrameworkCore;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -21,29 +22,35 @@ namespace DogsIRL_API.Models.Services
             return interaction;
         }
 
-        public Interaction DeleteInteraction(Interaction interaction)
+        public async Task DeleteInteraction(Interaction interaction)
         {
-            throw new NotImplementedException();
+            _context.Remove(interaction);
+            await _context.SaveChangesAsync();
         }
 
-        public Interaction EditInteraction(Interaction interaction)
+        public async Task EditInteraction(Interaction interaction)
         {
-            throw new NotImplementedException();
+            _context.Update(interaction);
+            await _context.SaveChangesAsync();
         }
 
-        public IEnumerable<Interaction> GetAllInteractions()
+        public async Task<IEnumerable<Interaction>> GetAllInteractions()
         {
-            throw new NotImplementedException();
+            IEnumerable<Interaction> allInteractions = await _context.Interactions.ToListAsync();
+            return allInteractions;
         }
 
-        public Interaction GetInteractionById(int Id)
+        public async Task<Interaction> GetInteractionById(int Id)
         {
-            throw new NotImplementedException();
+            return await _context.Interactions.FindAsync(Id);
         }
 
-        public Interaction GetRandomInteraction()
+        public async Task<Interaction> GetRandomInteraction()
         {
-            throw new NotImplementedException();
+            var random = new Random();
+            List<Interaction> allInteractions = await _context.Interactions.ToListAsync();
+            Interaction randomInteraction = allInteractions[random.Next(allInteractions.Count)];
+            return randomInteraction;
         }
     }
 }

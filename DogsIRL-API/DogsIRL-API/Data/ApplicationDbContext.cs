@@ -42,6 +42,7 @@ namespace DogsIRL_API.Data
 
         public DbSet<PetCard> PetCards { get; set; }
         public DbSet<CollectedPetCard> CollectedPetCards { get; set; }
+        public DbSet<Interaction> Interactions { get; set; }
 
     }
 }

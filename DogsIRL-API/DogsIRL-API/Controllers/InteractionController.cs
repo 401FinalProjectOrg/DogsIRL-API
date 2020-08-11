@@ -23,43 +23,45 @@ namespace DogsIRL_API.Controllers
         }
 
         [HttpGet("random")]
-        public ActionResult<Interaction> GetRandomInteraction()
+        public async Task<ActionResult<Interaction>> GetRandomInteraction()
         {
 
-            Interaction randomResult = _interactionService.GetRandomInteraction();
+            Interaction randomResult = await _interactionService.GetRandomInteraction();
             return Ok(randomResult);
         }
 
         [HttpGet("{id}")]
-        public ActionResult<Interaction> GetInteractionById(int id)
+        public async Task<ActionResult<Interaction>> GetInteractionById(int id)
         {
-            Interaction result = _interactionService.GetInteractionById(id);
+            Interaction result = await _interactionService.GetInteractionById(id);
             return Ok(result);
         }
 
         [HttpGet]
-        public ActionResult<List<Interaction>> GetAllInteractions()
+        public async Task<ActionResult<IEnumerable<Interaction>>> GetAllInteractions()
         {
-            List<Interaction> results = _interactionService.GetAllInteractions().ToList();
+            IEnumerable<Interaction> results = await _interactionService.GetAllInteractions();
             return Ok(results);
         }
 
         [HttpPost]
-        public ActionResult<Interaction> AddInteraction(Interaction interaction)
+        public async Task<ActionResult<Interaction>> AddInteraction(Interaction interaction)
         {
-            Interaction added = _interactionService.AddInteraction(interaction);
+            Interaction added = await _interactionService.AddInteraction(interaction);
             return Ok(added);
         }
 
         [HttpPut("{id}")]
-        public ActionResult<Interaction> EditInteraction(int id, Interaction interaction)
+        public async Task<ActionResult<Interaction>> EditInteraction(int id, Interaction interaction)
         {
             if(id != interaction.Id)
             {
                 return BadRequest();
             }
-            Interaction result = _interactionService.EditInteraction(interaction);
-            return Ok(result);
+
+            await _interactionService.EditInteraction(interaction);
+
+            return Ok();
         }
     }
 }

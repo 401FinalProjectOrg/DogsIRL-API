@@ -42,6 +42,7 @@ namespace DogsIRL_API
 
             services.AddTransient<IPetCardsManager, PetCardsService>();
             services.AddTransient<IEmailSender, EmailSender>();
+            services.AddTransient<IInteractionManager, InteractionService>();
 
             // Install-package Microsoft.EntityFrameworkCore.SqlServer
             services.AddDbContext<ApplicationDbContext>(options =>

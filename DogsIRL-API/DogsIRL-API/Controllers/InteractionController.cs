@@ -63,5 +63,18 @@ namespace DogsIRL_API.Controllers
 
             return Ok();
         }
+
+        [HttpDelete("{id}")]
+        public async Task<ActionResult<Interaction>> DeleteInteraction(int id, Interaction interaction)
+        {
+            if (id != interaction.Id)
+            {
+                return BadRequest();
+            }
+
+            await _interactionService.DeleteInteraction(interaction);
+
+            return Ok();
+        }
     }
 }

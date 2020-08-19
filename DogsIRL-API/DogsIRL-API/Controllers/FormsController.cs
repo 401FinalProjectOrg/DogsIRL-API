@@ -17,12 +17,10 @@ namespace DogsIRL_API.Controllers
             _userManager = userManager;
         }
 
-        [HttpGet("reset-password")] // figure out what the url looks like
+        [HttpGet("reset-password")]
         public IActionResult ResetPassword(string code, string userEmail)
         {
             ResetPasswordInput model = new ResetPasswordInput { Token = code, Email = userEmail };
-            //model.Email = // how to get email from token?
-            //model.Token = token;
             return View(model);
         }
 

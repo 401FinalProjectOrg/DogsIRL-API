@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.IdentityModel.Tokens.Jwt;
 using System.IO;
+using System.Linq;
 using System.Net;
 using System.Net.Http;
 using System.Security.Claims;
@@ -27,7 +28,7 @@ namespace DogsIRL_API.Controllers
 {
     [ApiController]
     [Route("api/[controller]")]
-    public class AccountController
+    public class AccountController : ControllerBase
     {
 
         private UserManager<ApplicationUser> _userManager;
@@ -48,16 +49,22 @@ namespace DogsIRL_API.Controllers
         }
 
         [HttpPost("login")]
-        public async Task<string> SignIn(SignInInput signInInput)
+        public async Task<IActionResult> SignIn(SignInInput signInInput)
         {
             var result = await _signInManager.PasswordSignInAsync(signInInput.Username, signInInput.Password, isPersistent: false, false);
 
             if (result.Succeeded)
             {
-                string JwtToken = GetToken(signInInput.Username);
-                return JwtToken;
+                var user = await _userManager.FindByNameAsync(signInInput.Username);
+                var identityRoles = await _userManager.GetRolesAsync(user);
+                var jwtToken = CreateToken(user, identityRoles.ToList());
+                return Ok(new 
+                { 
+                    jwt = new JwtSecurityTokenHandler().WriteToken(jwtToken), 
+                    expiration = jwtToken.ValidTo
+                });
             }
-            return null;
+            return BadRequest("Invalid login attempt");
         }
 
         [HttpPost("logout")]
@@ -139,6 +146,7 @@ namespace DogsIRL_API.Controllers
 
 
         // Code for JWT token creation taken from https://www.c-sharpcorner.com/article/asp-net-core-web-api-creating-and-validating-jwt-json-web-token/ 5/20/2020
+        // No longer used. Here for reference only.
         private protected string GetToken(string username)
         {
             string key = _configuration["AuthKey"]; // Secret key
@@ -158,5 +166,37 @@ namespace DogsIRL_API.Controllers
                 signingCredentials: credentials);
             return new JwtSecurityTokenHandler().WriteToken(token);
         }
+
+        private JwtSecurityToken CreateToken(ApplicationUser user, List<string> roles)
+        {
+            var authClaims = new List<Claim>
+            {
+                new Claim(JwtRegisteredClaimNames.Sub, user.UserName),
+                new Claim(JwtRegisteredClaimNames.Jti, Guid.NewGuid().ToString()),
+                new Claim("UserId", user.Id),
+                new Claim("UserEmail", user.Email)
+            };
+            foreach(var role in roles)
+            {
+                authClaims.Add(new Claim(ClaimTypes.Role, role));
+            }
+
+            var token = AuthenticateToken(authClaims);
+
+            return token;
+        }
+
+        private JwtSecurityToken AuthenticateToken(List<Claim> claims)
+        {
+            var signingKey = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(_configuration["AuthKey"]));
+            var token = new JwtSecurityToken(
+                issuer: _configuration["AuthIssuer"],
+                expires: DateTime.Now.AddDays(1),
+                claims: claims,
+                signingCredentials: new SigningCredentials(signingKey, SecurityAlgorithms.HmacSha256)
+                );
+            return token;
+        }
+
     }
 }

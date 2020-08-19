@@ -12,7 +12,7 @@ namespace DogsIRL_API.Controllers
 {
     [ApiController]
     [Route("api/[controller]")]
-    [Authorize(AuthenticationSchemes = JwtBearerDefaults.AuthenticationScheme)]
+    [Authorize(Policy = "AdminOnly")]
     public class InteractionController : ControllerBase
     {
         private readonly IInteractionManager _interactionService;
@@ -23,6 +23,7 @@ namespace DogsIRL_API.Controllers
         }
 
         [HttpGet("random")]
+        [Authorize]
         public async Task<ActionResult<Interaction>> GetRandomInteraction()
         {
 

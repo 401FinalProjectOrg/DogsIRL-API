@@ -13,7 +13,7 @@ namespace DogsIRL_API.Controllers
 {
     [ApiController]
     [Route("api/[controller]")]
-    [Authorize(AuthenticationSchemes = JwtBearerDefaults.AuthenticationScheme)]
+    [Authorize]
     public class CollectionController : ControllerBase
     {
         private readonly IPetCardsManager _petCardsService;

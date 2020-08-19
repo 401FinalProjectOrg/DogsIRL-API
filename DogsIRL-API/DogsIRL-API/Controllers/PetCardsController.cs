@@ -19,19 +19,17 @@ namespace DogsIRL_API.Controllers
 {
     [ApiController]
     [Route("api/[controller]")]
-    [Authorize(AuthenticationSchemes = JwtBearerDefaults.AuthenticationScheme)]
+    [Authorize]
     public class PetCardsController : ControllerBase
     {
         private readonly IPetCardsManager _petCardsService;
-        private IConfiguration _configuration;
         private readonly ILogger<PetCardsController> _logger;
 
 
-        public PetCardsController(ILogger<PetCardsController> logger, IPetCardsManager petCardsService, IConfiguration configuration)
+        public PetCardsController(ILogger<PetCardsController> logger, IPetCardsManager petCardsService)
         {
             _logger = logger;
             _petCardsService = petCardsService;
-            _configuration = configuration;
         }
 
         [HttpGet("random")]
@@ -41,12 +39,14 @@ namespace DogsIRL_API.Controllers
         }
 
         [HttpGet]
+        [Authorize(Policy ="AdminOnly")]
         public async Task<List<PetCard>> GetAllPetCards()
         {
             return await _petCardsService.GetAllPetCards();
         }
 
         [HttpGet("{petCardId}")]
+        [Authorize(Policy = "AdminOnly")]
         public async Task<PetCard> GetPetCardById(int petCardId)
         {
             return await _petCardsService.GetPetCardById(petCardId);
@@ -55,7 +55,7 @@ namespace DogsIRL_API.Controllers
         [HttpGet("user/{username}")]
         public async Task<List<PetCard>> GetAllPetCardsForOwnerByUserName(string username)
         {
-            var identity = HttpContext.User.Identity as ClaimsIdentity;
+            var identity = User.Identity as ClaimsIdentity;
             if (identity != null)
             {
                 string tokenUsername = identity.FindFirst("username").Value;
@@ -70,7 +70,7 @@ namespace DogsIRL_API.Controllers
         [HttpPost]
         public async Task<ActionResult<PetCard>> CreatePetCard(PetCard petcard)
         {
-            var identity = HttpContext.User.Identity as ClaimsIdentity;
+            var identity = User.Identity as ClaimsIdentity;
             if (identity != null)
             {
                 string tokenUsername = identity.FindFirst("username").Value;
@@ -86,7 +86,7 @@ namespace DogsIRL_API.Controllers
         [HttpDelete("{Id}")]
         public async Task<ActionResult<PetCard>> DeletePetCard(int ID, PetCard petCard)
         {
-            var identity = HttpContext.User.Identity as ClaimsIdentity;
+            var identity = User.Identity as ClaimsIdentity;
             if (identity != null)
             {
                 string tokenUsername = identity.FindFirst("username").Value;
@@ -107,7 +107,7 @@ namespace DogsIRL_API.Controllers
         [HttpPut("{Id}")]
         public async Task<IActionResult> UpdatePetCard(int ID, PetCard petCard)
         {
-            var identity = HttpContext.User.Identity as ClaimsIdentity;
+            var identity = User.Identity as ClaimsIdentity;
             if (identity != null)
             {
                 string tokenUsername = identity.FindFirst("username").Value;

@@ -29,7 +29,7 @@ namespace DogsIRL_API.Controllers
             var identity = HttpContext.User.Identity as ClaimsIdentity;
             if (identity != null)
             {
-                string tokenUsername = identity.FindFirst("username").Value;
+                string tokenUsername = identity.FindFirst("sub").Value;
                 if (tokenUsername == input.Username)
                 {
                     PetCard petCard = await _petCardsService.GetPetCardById(input.PetCardID);
@@ -46,7 +46,7 @@ namespace DogsIRL_API.Controllers
             var identity = HttpContext.User.Identity as ClaimsIdentity;
             if (identity != null)
             {
-                string tokenUsername = identity.FindFirst("username").Value;
+                string tokenUsername = identity.FindFirst("sub").Value;
                 if (tokenUsername == username)
                 {
                     list = await _petCardsService.GetAllCollectedPetCardsForUser(username);

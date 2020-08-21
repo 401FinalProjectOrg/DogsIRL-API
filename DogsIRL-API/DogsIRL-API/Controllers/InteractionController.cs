@@ -12,7 +12,7 @@ namespace DogsIRL_API.Controllers
 {
     [ApiController]
     [Route("api/[controller]")]
-    [Authorize(Policy = "AdminOnly")]
+    [Authorize]
     public class InteractionController : ControllerBase
     {
         private readonly IInteractionManager _interactionService;
@@ -23,7 +23,6 @@ namespace DogsIRL_API.Controllers
         }
 
         [HttpGet("random")]
-        [Authorize]
         public async Task<ActionResult<Interaction>> GetRandomInteraction()
         {
 
@@ -32,6 +31,7 @@ namespace DogsIRL_API.Controllers
         }
 
         [HttpGet("{id}")]
+        [Authorize(Policy = "AdminOnly")]
         public async Task<ActionResult<Interaction>> GetInteractionById(int id)
         {
             Interaction result = await _interactionService.GetInteractionById(id);
@@ -39,6 +39,7 @@ namespace DogsIRL_API.Controllers
         }
 
         [HttpGet]
+        [Authorize(Policy = "AdminOnly")]
         public async Task<ActionResult<IEnumerable<Interaction>>> GetAllInteractions()
         {
             IEnumerable<Interaction> results = await _interactionService.GetAllInteractions();
@@ -46,6 +47,7 @@ namespace DogsIRL_API.Controllers
         }
 
         [HttpPost]
+        [Authorize(Policy = "AdminOnly")]
         public async Task<ActionResult<Interaction>> AddInteraction(Interaction interaction)
         {
             Interaction added = await _interactionService.AddInteraction(interaction);
@@ -53,6 +55,7 @@ namespace DogsIRL_API.Controllers
         }
 
         [HttpPut("{id}")]
+        [Authorize(Policy = "AdminOnly")]
         public async Task<ActionResult<Interaction>> EditInteraction(int id, Interaction interaction)
         {
             if(id != interaction.Id)
@@ -66,6 +69,7 @@ namespace DogsIRL_API.Controllers
         }
 
         [HttpDelete("{id}")]
+        [Authorize(Policy = "AdminOnly")]
         public async Task<ActionResult<Interaction>> DeleteInteraction(int id, Interaction interaction)
         {
             if (id != interaction.Id)

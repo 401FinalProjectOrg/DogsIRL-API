@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Linq;
 using System.Security.Claims;
 using System.Threading.Tasks;
 using DogsIRL_API.Models;
@@ -26,10 +27,10 @@ namespace DogsIRL_API.Controllers
         [HttpPost]
         public async Task AddPetCardToUserCollection(CollectInput input)
         {
-            var identity = HttpContext.User.Identity as ClaimsIdentity;
+            var identity = User.Claims;
             if (identity != null)
             {
-                string tokenUsername = identity.FindFirst("sub").Value;
+                string tokenUsername = identity.FirstOrDefault(x => x.Type == "UserName").Value;
                 if (tokenUsername == input.Username)
                 {
                     PetCard petCard = await _petCardsService.GetPetCardById(input.PetCardID);
@@ -43,10 +44,10 @@ namespace DogsIRL_API.Controllers
         {
             List<CollectedPetCard> list = new List<CollectedPetCard>();
 
-            var identity = HttpContext.User.Identity as ClaimsIdentity;
+            var identity = User.Claims;
             if (identity != null)
             {
-                string tokenUsername = identity.FindFirst("sub").Value;
+                string tokenUsername = identity.FirstOrDefault(x => x.Type == "UserName").Value;
                 if (tokenUsername == username)
                 {
                     list = await _petCardsService.GetAllCollectedPetCardsForUser(username);

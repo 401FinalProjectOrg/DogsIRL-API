@@ -55,10 +55,10 @@ namespace DogsIRL_API.Controllers
         [HttpGet("user/{username}")]
         public async Task<List<PetCard>> GetAllPetCardsForOwnerByUserName(string username)
         {
-            var identity = User.Identity as ClaimsIdentity;
+            var identity = User.Claims;
             if (identity != null)
             {
-                string tokenUsername = identity.FindFirst("sub").Value;
+                string tokenUsername = identity.FirstOrDefault(x => x.Type == "UserName").Value;
                 if(tokenUsername == username)
                 {
                     return await _petCardsService.GetPetCardsForOwnerByUsername(username);
@@ -70,10 +70,10 @@ namespace DogsIRL_API.Controllers
         [HttpPost]
         public async Task<ActionResult<PetCard>> CreatePetCard(PetCard petcard)
         {
-            var identity = User.Identity as ClaimsIdentity;
+            var identity = User.Claims;
             if (identity != null)
             {
-                string tokenUsername = identity.FindFirst("sub").Value;
+                string tokenUsername = identity.FirstOrDefault(x => x.Type == "UserName").Value;
                 if (tokenUsername == petcard.Owner)
                 {
                     await _petCardsService.CreatePetCard(petcard);
@@ -86,10 +86,10 @@ namespace DogsIRL_API.Controllers
         [HttpDelete("{Id}")]
         public async Task<ActionResult<PetCard>> DeletePetCard(int ID, PetCard petCard)
         {
-            var identity = User.Identity as ClaimsIdentity;
+            var identity = User.Claims;
             if (identity != null)
             {
-                string tokenUsername = identity.FindFirst("sub").Value;
+                string tokenUsername = identity.FirstOrDefault(x => x.Type == "UserName").Value;
                 if (tokenUsername == petCard.Owner)
                 {
                     if (ID != petCard.ID)
@@ -107,10 +107,10 @@ namespace DogsIRL_API.Controllers
         [HttpPut("{Id}")]
         public async Task<IActionResult> UpdatePetCard(int ID, PetCard petCard)
         {
-            var identity = User.Identity as ClaimsIdentity;
+            var identity = User.Claims;
             if (identity != null)
             {
-                string tokenUsername = identity.FindFirst("sub").Value;
+                string tokenUsername = identity.FirstOrDefault(x => x.Type == "UserName").Value;
                 if (tokenUsername == petCard.Owner)
                 {
                     if (ID != petCard.ID)

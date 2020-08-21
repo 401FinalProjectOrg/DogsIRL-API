@@ -174,7 +174,8 @@ namespace DogsIRL_API.Controllers
                 new Claim(JwtRegisteredClaimNames.Sub, user.UserName),
                 new Claim(JwtRegisteredClaimNames.Jti, Guid.NewGuid().ToString()),
                 new Claim("UserId", user.Id),
-                new Claim("UserEmail", user.Email)
+                new Claim("UserEmail", user.Email),
+                new Claim("UserName", user.UserName)
             };
             foreach(var role in roles)
             {

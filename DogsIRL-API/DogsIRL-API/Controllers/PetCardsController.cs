@@ -58,7 +58,7 @@ namespace DogsIRL_API.Controllers
             var identity = User.Identity as ClaimsIdentity;
             if (identity != null)
             {
-                string tokenUsername = identity.FindFirst("username").Value;
+                string tokenUsername = identity.FindFirst("sub").Value;
                 if(tokenUsername == username)
                 {
                     return await _petCardsService.GetPetCardsForOwnerByUsername(username);
@@ -73,7 +73,7 @@ namespace DogsIRL_API.Controllers
             var identity = User.Identity as ClaimsIdentity;
             if (identity != null)
             {
-                string tokenUsername = identity.FindFirst("username").Value;
+                string tokenUsername = identity.FindFirst("sub").Value;
                 if (tokenUsername == petcard.Owner)
                 {
                     await _petCardsService.CreatePetCard(petcard);
@@ -89,7 +89,7 @@ namespace DogsIRL_API.Controllers
             var identity = User.Identity as ClaimsIdentity;
             if (identity != null)
             {
-                string tokenUsername = identity.FindFirst("username").Value;
+                string tokenUsername = identity.FindFirst("sub").Value;
                 if (tokenUsername == petCard.Owner)
                 {
                     if (ID != petCard.ID)
@@ -110,7 +110,7 @@ namespace DogsIRL_API.Controllers
             var identity = User.Identity as ClaimsIdentity;
             if (identity != null)
             {
-                string tokenUsername = identity.FindFirst("username").Value;
+                string tokenUsername = identity.FindFirst("sub").Value;
                 if (tokenUsername == petCard.Owner)
                 {
                     if (ID != petCard.ID)

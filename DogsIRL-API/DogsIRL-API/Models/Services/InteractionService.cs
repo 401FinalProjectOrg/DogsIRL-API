@@ -4,6 +4,7 @@ using Microsoft.EntityFrameworkCore;
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Reflection;
 using System.Threading.Tasks;
 
 namespace DogsIRL_API.Models.Services
@@ -45,11 +46,24 @@ namespace DogsIRL_API.Models.Services
             return await _context.Interactions.FindAsync(Id);
         }
 
-        public async Task<Interaction> GetRandomInteraction()
+        public async Task<Interaction> GetRandomInteraction(DogNamePair dogNames)
         {
             var random = new Random();
             List<Interaction> allInteractions = await _context.Interactions.ToListAsync();
             Interaction randomInteraction = allInteractions[random.Next(allInteractions.Count)];
+            
+            // TODO: refactor putting dog names into each line
+            randomInteraction.OpeningLine.Replace("{Current dog}", dogNames.CurrentDogName);
+            randomInteraction.OpeningLine.Replace("{Other dog}", dogNames.OtherDogName);
+            randomInteraction.OpeningLineOther.Replace("{Current dog}", dogNames.CurrentDogName);
+            randomInteraction.OpeningLineOther.Replace("{Other dog}", dogNames.OtherDogName);
+            randomInteraction.ConversationLine.Replace("{Current dog}", dogNames.CurrentDogName);
+            randomInteraction.ConversationLine.Replace("{Other dog}", dogNames.OtherDogName);
+            randomInteraction.GoodbyeLineOther.Replace("{Current dog}", dogNames.CurrentDogName);
+            randomInteraction.GoodbyeLineOther.Replace("{Other dog}", dogNames.OtherDogName);
+            randomInteraction.GoodbyeLine.Replace("{Current dog}", dogNames.CurrentDogName);
+            randomInteraction.GoodbyeLine.Replace("{Other dog}", dogNames.OtherDogName);
+            
             return randomInteraction;
         }
     }

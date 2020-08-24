@@ -23,10 +23,10 @@ namespace DogsIRL_API.Controllers
         }
 
         [HttpGet("random")]
-        public async Task<ActionResult<Interaction>> GetRandomInteraction()
+        public async Task<ActionResult<Interaction>> GetRandomInteraction(DogNamePair dogNames)
         {
 
-            Interaction randomResult = await _interactionService.GetRandomInteraction();
+            Interaction randomResult = await _interactionService.GetRandomInteraction(dogNames);
             return Ok(randomResult);
         }
 

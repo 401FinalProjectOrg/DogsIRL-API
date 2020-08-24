@@ -7,7 +7,7 @@ namespace DogsIRL_API.Models.Interfaces
 {
     public interface IInteractionManager
     {
-        public Task<Interaction> GetRandomInteraction();
+        public Task<Interaction> GetRandomInteraction(DogNamePair dogNames);
         public Task<Interaction> GetInteractionById(int Id);
         public Task<IEnumerable<Interaction>> GetAllInteractions();
         public Task<Interaction> AddInteraction(Interaction interaction);

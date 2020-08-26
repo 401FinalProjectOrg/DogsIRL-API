@@ -46,25 +46,29 @@ namespace DogsIRL_API.Models.Services
             return await _context.Interactions.FindAsync(Id);
         }
 
-        public async Task<Interaction> GetRandomInteraction(DogNamePair dogNames)
+        public async Task<Interaction> GetRandomInteraction()
         {
             var random = new Random();
             List<Interaction> allInteractions = await _context.Interactions.ToListAsync();
             Interaction randomInteraction = allInteractions[random.Next(allInteractions.Count)];
-            
-            // TODO: refactor putting dog names into each line
-            randomInteraction.OpeningLine.Replace("{Current dog}", dogNames.CurrentDogName);
-            randomInteraction.OpeningLine.Replace("{Other dog}", dogNames.OtherDogName);
-            randomInteraction.OpeningLineOther.Replace("{Current dog}", dogNames.CurrentDogName);
-            randomInteraction.OpeningLineOther.Replace("{Other dog}", dogNames.OtherDogName);
-            randomInteraction.ConversationLine.Replace("{Current dog}", dogNames.CurrentDogName);
-            randomInteraction.ConversationLine.Replace("{Other dog}", dogNames.OtherDogName);
-            randomInteraction.GoodbyeLineOther.Replace("{Current dog}", dogNames.CurrentDogName);
-            randomInteraction.GoodbyeLineOther.Replace("{Other dog}", dogNames.OtherDogName);
-            randomInteraction.GoodbyeLine.Replace("{Current dog}", dogNames.CurrentDogName);
-            randomInteraction.GoodbyeLine.Replace("{Other dog}", dogNames.OtherDogName);
-            
             return randomInteraction;
+        }
+
+        public Interaction AddNamesToInteraction(Interaction interaction, DogNamePair dogNames)
+        {
+            // TODO: refactor putting dog names into each line
+            interaction.OpeningLine = interaction.OpeningLine.Replace("{Current dog}", dogNames.CurrentDogName);
+            interaction.OpeningLine = interaction.OpeningLine.Replace("{Other dog}", dogNames.OtherDogName);
+            interaction.OpeningLineOther = interaction.OpeningLineOther.Replace("{Current dog}", dogNames.CurrentDogName);
+            interaction.OpeningLineOther = interaction.OpeningLineOther.Replace("{Other dog}", dogNames.OtherDogName);
+            interaction.ConversationLine = interaction.ConversationLine.Replace("{Current dog}", dogNames.CurrentDogName);
+            interaction.ConversationLine = interaction.ConversationLine.Replace("{Other dog}", dogNames.OtherDogName);
+            interaction.GoodbyeLineOther = interaction.GoodbyeLineOther.Replace("{Current dog}", dogNames.CurrentDogName);
+            interaction.GoodbyeLineOther = interaction.GoodbyeLineOther.Replace("{Other dog}", dogNames.OtherDogName);
+            interaction.GoodbyeLine = interaction.GoodbyeLine.Replace("{Current dog}", dogNames.CurrentDogName);
+            interaction.GoodbyeLine = interaction.GoodbyeLine.Replace("{Other dog}", dogNames.OtherDogName);
+
+            return interaction;
         }
     }
 }

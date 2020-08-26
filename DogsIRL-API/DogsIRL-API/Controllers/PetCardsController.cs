@@ -67,6 +67,23 @@ namespace DogsIRL_API.Controllers
             return null;
         }
 
+        [HttpGet("mypets/{petCardId}")]
+        public async Task<ActionResult<PetCard>> GetPetCardByIdIfOwned(int petCardId)
+        {
+            var usernameClaim = User.Claims.FirstOrDefault(x => x.Type == "UserName");
+            if(usernameClaim == null)
+            {
+                return BadRequest();
+            }
+            string username = usernameClaim.Value;
+            PetCard petCard = await _petCardsService.GetPetCardById(petCardId);
+            if(petCard.Owner != username)
+            {
+                return BadRequest();
+            }
+            return Ok(petCard);
+        }
+
         [HttpPost]
         public async Task<ActionResult<PetCard>> CreatePetCard(PetCard petcard)
         {

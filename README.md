@@ -4,7 +4,7 @@
 ## 🐶 Deployment
 Our API is live on Azure!
 
-https://dogs-irl-api.azurewebsites.net/api/account/register
+https://dogs-irl-api.azurewebsites.net/
 
 ## 🐶 Authors
 - Andrew Casper

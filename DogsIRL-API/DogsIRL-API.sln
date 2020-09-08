@@ -5,7 +5,7 @@ VisualStudioVersion = 16.0.30011.22
 MinimumVisualStudioVersion = 10.0.40219.1
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "DogsIRL-API", "DogsIRL-API\DogsIRL-API.csproj", "{4EC9C136-9E95-457D-B228-600D8D145EA2}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Dogs-IRL-API-tests", "Dogs-IRL-API-tests\Dogs-IRL-API-tests.csproj", "{68D8D404-56BA-4C4D-A35F-07D8F07E6D75}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Dogs-IRL-API-tests", "Dogs-IRL-API-tests\Dogs-IRL-API-tests.csproj", "{68D8D404-56BA-4C4D-A35F-07D8F07E6D75}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution

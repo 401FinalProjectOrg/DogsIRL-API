@@ -77,7 +77,7 @@ namespace DogsIRL_API.Controllers
 
 
         [HttpPost("register")]
-        public async Task<ActionResult<List<IdentityError>>> CreateAccount(RegisterInput registerInput)
+        public async Task<IActionResult> CreateAccount(RegisterInput registerInput)
         {
             var user = new ApplicationUser
             {
@@ -87,12 +87,15 @@ namespace DogsIRL_API.Controllers
             var result = await _userManager.CreateAsync(user, registerInput.Password);
             if (!result.Succeeded)
             {
-                return new ConflictObjectResult(result.Errors);
+                return BadRequest(new RegisterResponse
+                {
+                    Errors = result.Errors.ToList()
+                });
             }
             else
             {
                 SendAccountConfirmationEmail(user);
-                return new OkObjectResult(result.Errors);
+                return Ok();
             }
         }
 

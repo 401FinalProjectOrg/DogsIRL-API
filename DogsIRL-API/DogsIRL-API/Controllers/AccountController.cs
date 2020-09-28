@@ -87,10 +87,7 @@ namespace DogsIRL_API.Controllers
             var result = await _userManager.CreateAsync(user, registerInput.Password);
             if (!result.Succeeded)
             {
-                return BadRequest(new RegisterResponse
-                {
-                    Errors = result.Errors.ToList()
-                });
+                return BadRequest();
             }
             else
             {

@@ -150,17 +150,11 @@ namespace DogsIRL_API.Models.Services
         /// <returns>The list of all the collected pet cards, once retrieved</returns>
         public async Task<List<CollectedPetCard>> GetAllCollectedPetCardsForUser(string username)
         {
-            var query = _petCardsContext.CollectedPetCards
-                .Where(cpc => cpc != null && cpc.Username == username);
-
-            List<CollectedPetCard> list = new List<CollectedPetCard>();
-
-            if(query.ToList() != null)
-            {
-                list = await query.Include(cpc => cpc.PetCard).ToListAsync();
-            };
-                
-            return list;
+            var results = await _petCardsContext.CollectedPetCards
+                .Where(cpc => cpc.Username == username)
+                .Include(cpc => cpc.PetCard)
+                .ToListAsync();
+            return results;
         }
 
     }

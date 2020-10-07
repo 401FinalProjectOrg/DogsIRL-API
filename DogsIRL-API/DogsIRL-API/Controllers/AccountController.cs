@@ -59,7 +59,8 @@ namespace DogsIRL_API.Controllers
                 var identityRoles = await _userManager.GetRolesAsync(user);
                 var jwtToken = CreateToken(user, identityRoles.ToList());
                 return Ok(new 
-                { 
+                {
+                    username = user.UserName,
                     jwt = new JwtSecurityTokenHandler().WriteToken(jwtToken), 
                     expiration = jwtToken.ValidTo
                 });
@@ -142,29 +143,6 @@ namespace DogsIRL_API.Controllers
 
             var callbackUrl = _linkGenerator.GetUriByAction(_httpContextAccessor.HttpContext, "reset-password", "Forms", new { userEmail = user.Email, code = resetCode });
             await _email.SendEmailAsync(user.Email, "Reset Password", $"A request was made to reset your password. To do so, click <a href={callbackUrl}>here</a>. If you did not make this request, ignore this message. If you are receiving multiple messages about resetting your password that you did not request, contact the DogsIRL team at help@dogs-irl.com");
-        }
-
-
-        // Code for JWT token creation taken from https://www.c-sharpcorner.com/article/asp-net-core-web-api-creating-and-validating-jwt-json-web-token/ 5/20/2020
-        // No longer used. Here for reference only.
-        private protected string GetToken(string username)
-        {
-            string key = _configuration["AuthKey"]; // Secret key
-            var issuer = "https://dogsirl-api.azurewebsites.net";
-            var securityKey = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(key));
-            var credentials = new SigningCredentials(securityKey, SecurityAlgorithms.HmacSha256);
-
-            var permClaims = new List<Claim>();
-            permClaims.Add(new Claim(JwtRegisteredClaimNames.Jti, Guid.NewGuid().ToString()));
-            permClaims.Add(new Claim("valid", "1"));
-            permClaims.Add(new Claim("username", username));
-
-            var token = new JwtSecurityToken(issuer,
-                issuer, // audience same as issuer in our case
-                permClaims,
-                expires: DateTime.Now.AddDays(1),
-                signingCredentials: credentials);
-            return new JwtSecurityTokenHandler().WriteToken(token);
         }
 
         private JwtSecurityToken CreateToken(ApplicationUser user, List<string> roles)

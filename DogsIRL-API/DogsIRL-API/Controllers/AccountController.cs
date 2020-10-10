@@ -21,6 +21,7 @@ using Microsoft.AspNetCore.Mvc.ModelBinding;
 using Microsoft.AspNetCore.Mvc.Routing;
 using Microsoft.AspNetCore.Routing;
 using Microsoft.Extensions.Configuration;
+using Microsoft.Extensions.Options;
 using Microsoft.IdentityModel.Tokens;
 using Newtonsoft.Json;
 
@@ -88,7 +89,11 @@ namespace DogsIRL_API.Controllers
             var result = await _userManager.CreateAsync(user, registerInput.Password);
             if (!result.Succeeded)
             {
-                return BadRequest();
+                foreach(IdentityError error in result.Errors)
+                {
+                    ModelState.AddModelError("Errors", error.Description);
+                }
+                return Conflict(ModelState);
             }
             else
             {

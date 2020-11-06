@@ -1,5 +1,5 @@
 # DogsIRL
-![Main Logo](https://github.com/DogsIRLOrg/DogsIRL/blob/dev/assets/main.png)
+![Main Logo](https://github.com/DogsIRLOrg/DogsIRL/blob/dev/assets/DogsIRL-logo.png)
 
 ## 🐶 Deployment
 Our API is live on Azure!

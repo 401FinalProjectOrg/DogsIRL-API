@@ -74,12 +74,29 @@ namespace DogsIRL_API.Models.Services
             return userPetCards;
         }
 
+        /// <summary>
+        /// Get random petcard including current user petcard.
+        /// </summary>
+        /// <returns></returns>
         public async Task<PetCard> GetRandomPetCard()
         {
             var random = new Random();
             List<PetCard> allPetCards = await _petCardsContext.PetCards.ToListAsync();
             PetCard randomPetCard = allPetCards[random.Next(allPetCards.Count)];
             return randomPetCard;
+        }
+
+        /// <summary>
+        /// Getting random other PetCard that is not current user petcard.
+        /// </summary>
+        /// <param name="petCardId"></param>
+        /// <returns></returns>
+        public async Task<PetCard> GetRandomOtherPetCard(int petCardId)
+        {
+            var random = new Random();
+            List<PetCard> allOtherPetCards = await _petCardsContext.PetCards.Where(x => x.ID != petCardId).ToListAsync();
+            PetCard randomOtherPetCard = allOtherPetCards[random.Next(allOtherPetCards.Count)];
+            return randomOtherPetCard;
         }
 
         /// <summary>

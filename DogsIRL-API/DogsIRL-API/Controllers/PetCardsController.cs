@@ -38,6 +38,21 @@ namespace DogsIRL_API.Controllers
             return await _petCardsService.GetRandomPetCard();
         }
 
+        [HttpPost("randomOtherPet")]
+        public async Task<PetCard> GetRandomOtherPetCard(PetCard currentPet)
+        {
+            var identity = User.Claims;
+            if (identity != null)
+            {
+                string tokenUsername = identity.FirstOrDefault(x => x.Type == "UserName").Value;
+                if (tokenUsername == currentPet.Owner)
+                {
+                    return await _petCardsService.GetRandomOtherPetCard(currentPet.ID);
+                }
+            }
+            return null;
+        }
+
         [HttpGet]
         [Authorize(Policy ="AdminOnly")]
         public async Task<List<PetCard>> GetAllPetCards()

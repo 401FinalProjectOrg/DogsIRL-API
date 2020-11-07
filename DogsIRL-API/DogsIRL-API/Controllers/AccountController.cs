@@ -1,29 +1,19 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.IdentityModel.Tokens.Jwt;
-using System.IO;
 using System.Linq;
-using System.Net;
-using System.Net.Http;
 using System.Security.Claims;
-using System.Security.Policy;
 using System.Text;
 using System.Threading.Tasks;
 using System.Web;
 using DogsIRL_API.Models;
-using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Identity.UI.Services;
-using Microsoft.AspNetCore.Identity.UI.V3.Pages.Account.Internal;
 using Microsoft.AspNetCore.Mvc;
-using Microsoft.AspNetCore.Mvc.ModelBinding;
-using Microsoft.AspNetCore.Mvc.Routing;
 using Microsoft.AspNetCore.Routing;
 using Microsoft.Extensions.Configuration;
-using Microsoft.Extensions.Options;
 using Microsoft.IdentityModel.Tokens;
-using Newtonsoft.Json;
 
 namespace DogsIRL_API.Controllers
 {
@@ -77,7 +67,7 @@ namespace DogsIRL_API.Controllers
             return result;
         }
 
-
+        
         [HttpPost("register")]
         public async Task<IActionResult> CreateAccount(RegisterInput registerInput)
         {

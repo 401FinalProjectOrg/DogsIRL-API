@@ -6,6 +6,8 @@ namespace DogsIRL_API.Models
 {
     public class ApplicationUser : IdentityUser
     {
+        public DateTime DateCreatedAt { get; set; }
+        public bool IsActive { get; set; }
     }
 
     public static class ApplicationRoles

@@ -74,7 +74,9 @@ namespace DogsIRL_API.Controllers
             var user = new ApplicationUser
             {
                 UserName = registerInput.Username,
-                Email = registerInput.Email
+                Email = registerInput.Email,
+                DateCreatedAt = DateTime.Now,
+                IsActive = true
             };
             var result = await _userManager.CreateAsync(user, registerInput.Password);
             if (!result.Succeeded)

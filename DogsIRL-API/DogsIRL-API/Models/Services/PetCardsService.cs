@@ -135,6 +135,8 @@ namespace DogsIRL_API.Models.Services
                 newCPC.PetCardID = petCard.ID;
                 newCPC.Username = username;
                 _petCardsContext.CollectedPetCards.Add(newCPC);
+                petCard.Collections += 1;
+                _petCardsContext.PetCards.Update(petCard);
                 await _petCardsContext.SaveChangesAsync();
                 return newCPC;
             }

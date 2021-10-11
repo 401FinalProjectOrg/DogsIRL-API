@@ -123,6 +123,7 @@ namespace DogsIRL_API
             services.AddTransient<IPetCardsManager, PetCardsService>();
             services.AddTransient<IEmailSender, EmailSender>();
             services.AddTransient<IInteractionManager, InteractionService>();
+            services.AddSingleton<INotificationService, NotificationHubService>();
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.

@@ -23,12 +23,10 @@ namespace DogsIRL_API.Controllers
     public class PetCardsController : ControllerBase
     {
         private readonly IPetCardsManager _petCardsService;
-        private readonly ILogger<PetCardsController> _logger;
 
 
-        public PetCardsController(ILogger<PetCardsController> logger, IPetCardsManager petCardsService)
+        public PetCardsController(IPetCardsManager petCardsService)
         {
-            _logger = logger;
             _petCardsService = petCardsService;
         }
 
